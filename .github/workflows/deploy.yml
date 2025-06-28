@@ -62,9 +62,12 @@ jobs:
       
       - name: Install flyctl wrapper
         run: |
-          sudo mv /usr/local/bin/flyctl /usr/local/bin/flyctl-real
-          sudo cp scripts/flyctl-wrapper.sh /usr/local/bin/flyctl
-          sudo chmod +x /usr/local/bin/flyctl
+          FLYCTL_PATH=$(which flyctl)
+          echo "Found flyctl at: $FLYCTL_PATH"
+          sudo mv "$FLYCTL_PATH" "${FLYCTL_PATH}-real"
+          sudo cp scripts/flyctl-wrapper.sh "$FLYCTL_PATH"
+          sudo chmod +x "$FLYCTL_PATH"
+          echo "Flyctl wrapper installed successfully"
         working-directory: ./backend
       
       - name: Deploy to Fly.io
@@ -72,6 +75,20 @@ jobs:
           chmod +x scripts/deploy.sh
           export FLY_API_TOKEN="${{ secrets.FLY_API_TOKEN }}"
           ./scripts/deploy.sh
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        working-directory: ./backend
+      
+      - name: Diagnose deployment source
+        run: |
+          chmod +x scripts/diagnose-deployment-source.sh
+          ./scripts/diagnose-deployment-source.sh
+        working-directory: ./backend
+      
+      - name: Verify deployment configuration
+        run: |
+          chmod +x scripts/verify-deployment-config.sh
+          ./scripts/verify-deployment-config.sh
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         working-directory: ./backend
