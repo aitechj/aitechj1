@@ -103,6 +103,14 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 - Increase timeout to 10 minutes to accommodate Spring Boot startup time
 - Verify machine status after deployment: `flyctl status -a aitechj-backend`
 
+**Volume Mount Configuration Errors**:
+- Error: "machine has a volume mounted but app config does not specify a volume"
+- **Root Cause**: Using `--image` flag with pre-built image hash that contains outdated fly.toml
+- **Solution**: Always deploy from source without `--image` flag
+- **Wrong**: `flyctl deploy --image registry.fly.io/aitechj-backend:deployment-{hash}`
+- **Correct**: `flyctl deploy -a aitechj-backend --wait-timeout 10m0s`
+- When using `--image`, Fly.io reads config from the image, not your local fly.toml
+
 ### Frontend Issues
 
 **Build Failures**:
