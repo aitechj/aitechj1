@@ -19,7 +19,7 @@
 
 2. **Deploy to Fly.io**:
    ```bash
-   flyctl deploy -a aitechj-backend
+   flyctl deploy -a aitechj-backend --wait-timeout 10m0s
    ```
 
 3. **Verify deployment**:
@@ -91,6 +91,17 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 **Database Issues**:
 - H2 database files are persisted in `/data` volume
 - Database will be created automatically on first run
+
+**Deployment Timeout Failures**:
+- Spring Boot applications take 12+ seconds to start, which can cause deployment timeouts
+- Use increased wait timeout: `flyctl deploy -a aitechj-backend --wait-timeout 10m0s`
+- Monitor logs during deployment: `flyctl logs -a aitechj-backend`
+- Proxy connection errors during startup are normal and will resolve once the app is ready
+
+**"Unsuccessful Command" Errors**:
+- Usually caused by insufficient deployment wait timeout
+- Increase timeout to 10 minutes to accommodate Spring Boot startup time
+- Verify machine status after deployment: `flyctl status -a aitechj-backend`
 
 ### Frontend Issues
 
