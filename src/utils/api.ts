@@ -1,5 +1,5 @@
 const API_BASE_URL = typeof window !== 'undefined' 
-  ? (window as any).location?.origin?.includes('vercel.app') 
+  ? (window as Window).location?.origin?.includes('vercel.app') 
     ? 'https://aitechj-backend.fly.dev' 
     : 'https://aitechj-backend.fly.dev'
   : 'https://aitechj-backend.fly.dev';
@@ -44,14 +44,14 @@ class ApiClient {
     return this.request<T>(endpoint, { method: 'GET' });
   }
 
-  async post<T>(endpoint: string, body: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, body: Record<string, unknown>): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(body),
     });
   }
 
-  async put<T>(endpoint: string, body: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body: Record<string, unknown>): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: JSON.stringify(body),
@@ -68,6 +68,7 @@ export const apiClient = new ApiClient();
 export interface LoginRequest {
   email: string;
   password: string;
+  [key: string]: unknown;
 }
 
 export interface RegisterRequest {
@@ -75,6 +76,7 @@ export interface RegisterRequest {
   password: string;
   firstName: string;
   lastName: string;
+  [key: string]: unknown;
 }
 
 export interface User {
