@@ -115,6 +115,8 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 - **Correct**: `flyctl deploy -a aitechj-backend --wait-timeout 10m0s`
 - When using `--image`, Fly.io reads config from the image, not your local fly.toml
 
+**IMPORTANT**: The deployment validation script at `backend/scripts/deploy.sh` automatically prevents --image flag usage and ensures correct deployment. Always use this script for deployments.
+
 ### Frontend Issues
 
 **Build Failures**:

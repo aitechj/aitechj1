@@ -60,6 +60,13 @@ jobs:
       - name: Setup Fly.io CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
       
+      - name: Install flyctl wrapper
+        run: |
+          sudo mv /usr/local/bin/flyctl /usr/local/bin/flyctl-real
+          sudo cp scripts/flyctl-wrapper.sh /usr/local/bin/flyctl
+          sudo chmod +x /usr/local/bin/flyctl
+        working-directory: ./backend
+      
       - name: Deploy to Fly.io
         run: |
           chmod +x scripts/deploy.sh
