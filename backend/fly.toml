@@ -2,7 +2,7 @@
 # Replace aitechj-backend-v2 and aitechj_backend_v2_data with actual values
 
 app = 'aitechj-backend-v2'
-primary_region = 'iad'
+primary_region = 'sin'
 
 [build]
 

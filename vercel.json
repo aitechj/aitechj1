@@ -39,6 +39,6 @@
   ],
   "env": {
     "NEXT_PUBLIC_APP_URL": "https://aitechj-learning-platform.vercel.app",
-    "NEXT_PUBLIC_API_URL": "https://aitechj-backend.fly.dev"
+    "NEXT_PUBLIC_API_URL": "https://aitechj-backend-v2.fly.dev"
   }
 }
