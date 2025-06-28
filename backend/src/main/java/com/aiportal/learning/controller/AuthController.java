@@ -35,6 +35,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         try {
+            if (userService.existsByEmail(request.getEmail())) {
+                throw new RuntimeException("Email already exists");
+            }
+            
             AuthResponse response = authService.register(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
