@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 echo "🚀 Starting Fly.io deployment validation..."
 
 if [[ "$*" == *"--image"* ]]; then
