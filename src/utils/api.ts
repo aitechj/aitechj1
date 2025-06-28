@@ -1,8 +1,8 @@
 const API_BASE_URL = typeof window !== 'undefined' 
   ? (window as Window).location?.origin?.includes('vercel.app') 
-    ? process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend.fly.dev'
-    : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend.fly.dev'
-  : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend.fly.dev';
+    ? process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev'
+    : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev'
+  : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev';
 
 interface ApiResponse<T> {
   data?: T;
