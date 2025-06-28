@@ -53,7 +53,7 @@ jobs:
   deploy-backend:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.modified, 'backend/')
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       
