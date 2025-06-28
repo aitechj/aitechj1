@@ -1,6 +1,31 @@
+'use client';
+
 import { Navigation } from '@/components';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/');
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       <Navigation currentPage="profile" />
@@ -24,9 +49,12 @@ export default function ProfilePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">John Developer</h3>
-                <p className="text-slate-400 mb-4">john.developer@email.com</p>
-                <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full">Pro Member</span>
+                <h3 className="text-xl font-semibold text-white mb-2">{user.firstName} {user.lastName}</h3>
+                <p className="text-slate-400 mb-4">{user.email}</p>
+                <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                  {user.subscription === 'free' ? 'Free Member' : 
+                   user.subscription === 'pro' ? 'Pro Member' : 'Enterprise Member'}
+                </span>
               </div>
               
               <div className="space-y-4">
@@ -79,7 +107,7 @@ export default function ProfilePage() {
                   <label className="block text-slate-400 text-sm font-medium mb-2">First Name</label>
                   <input
                     type="text"
-                    value="John"
+                    value={user.firstName}
                     className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -87,7 +115,7 @@ export default function ProfilePage() {
                   <label className="block text-slate-400 text-sm font-medium mb-2">Last Name</label>
                   <input
                     type="text"
-                    value="Developer"
+                    value={user.lastName}
                     className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -95,7 +123,7 @@ export default function ProfilePage() {
                   <label className="block text-slate-400 text-sm font-medium mb-2">Email Address</label>
                   <input
                     type="email"
-                    value="john.developer@email.com"
+                    value={user.email}
                     className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -123,12 +151,24 @@ export default function ProfilePage() {
               <div className="bg-blue-600/20 border border-blue-600/50 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-white font-semibold">Pro Plan</h3>
-                    <p className="text-blue-300 text-sm">Unlimited courses and AI chat queries</p>
+                    <h3 className="text-white font-semibold">
+                      {user.subscription === 'free' ? 'Free Plan' : 
+                       user.subscription === 'pro' ? 'Pro Plan' : 'Enterprise Plan'}
+                    </h3>
+                    <p className="text-blue-300 text-sm">
+                      {user.subscription === 'free' ? 'Limited courses and AI chat queries' :
+                       user.subscription === 'pro' ? 'Unlimited courses and AI chat queries' :
+                       'Unlimited everything plus priority support'}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-semibold">$29/month</p>
-                    <p className="text-blue-300 text-sm">Next billing: Feb 15, 2024</p>
+                    <p className="text-white font-semibold">
+                      {user.subscription === 'free' ? 'Free' :
+                       user.subscription === 'pro' ? '$29/month' : '$99/month'}
+                    </p>
+                    <p className="text-blue-300 text-sm">
+                      {user.subscription !== 'free' ? 'Next billing: Feb 15, 2024' : 'Upgrade anytime'}
+                    </p>
                   </div>
                 </div>
               </div>

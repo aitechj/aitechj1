@@ -1,9 +1,15 @@
+'use client';
+
+import { useAuth } from '@/components/auth/AuthProvider';
+
 interface NavigationProps {
   currentPage?: string;
 }
 
 export default function Navigation({ currentPage }: NavigationProps) {
-  const navItems = [
+  const { isAuthenticated, logout } = useAuth();
+  
+  const authenticatedNavItems = [
     { href: "/", label: "Home" },
     { href: "/courses", label: "Courses" },
     { href: "/dashboard", label: "Dashboard" },
@@ -11,6 +17,14 @@ export default function Navigation({ currentPage }: NavigationProps) {
     { href: "/profile", label: "Profile" },
     { href: "/admin", label: "Admin" },
   ];
+
+  const unauthenticatedNavItems = [
+    { href: "/", label: "Home" },
+    { href: "/courses", label: "Courses" },
+    { href: "/auth", label: "Login" },
+  ];
+
+  const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
 
   return (
     <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm">
@@ -37,6 +51,14 @@ export default function Navigation({ currentPage }: NavigationProps) {
                 {item.label}
               </a>
             ))}
+            {isAuthenticated && (
+              <button
+                onClick={logout}
+                className="text-slate-300 hover:text-white transition-colors"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>
