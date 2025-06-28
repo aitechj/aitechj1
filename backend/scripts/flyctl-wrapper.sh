@@ -15,4 +15,4 @@ if [[ "$1" == "deploy" && "$*" == *"--image"* ]]; then
     exit 1
 fi
 
-exec /usr/local/bin/flyctl "$@"
+exec "${0}-real" "$@"
