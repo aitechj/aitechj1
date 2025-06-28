@@ -39,38 +39,48 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      try {
-        const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
-        setUser(userData);
-      } catch {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        try {
+          const { authApi } = await import('@/utils/api');
+          const response = await authApi.getCurrentUser();
+          
+          if (response.data) {
+            setUser(response.data);
+            localStorage.setItem('user_data', JSON.stringify(response.data));
+          } else {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_data');
+          }
+        } catch {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user_data');
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = async (email: string) => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const mockUser: User = {
-        id: '1',
-        email,
-        firstName: 'John',
-        lastName: 'Developer',
-        role: email.includes('admin') ? 'admin' : 'user',
-        subscription: 'pro'
-      };
-
-      const mockToken = 'mock_jwt_token_' + Date.now();
+      const { authApi } = await import('@/utils/api');
+      const response = await authApi.login({ email, password });
       
-      localStorage.setItem('auth_token', mockToken);
-      localStorage.setItem('user_data', JSON.stringify(mockUser));
-      setUser(mockUser);
-    } catch {
-      throw new Error('Login failed');
+      if (response.error || !response.data) {
+        throw new Error(response.error || 'Login failed');
+      }
+
+      const { token, user } = response.data;
+      
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('user_data', JSON.stringify(user));
+      setUser(user);
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Login failed');
     } finally {
       setIsLoading(false);
     }
@@ -79,22 +89,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
     setIsLoading(true);
     try {
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email,
-        firstName,
-        lastName,
-        role: 'user',
-        subscription: 'free'
-      };
-
-      const mockToken = 'mock_jwt_token_' + Date.now();
+      const { authApi } = await import('@/utils/api');
+      const response = await authApi.register({ email, password, firstName, lastName });
       
-      localStorage.setItem('auth_token', mockToken);
-      localStorage.setItem('user_data', JSON.stringify(mockUser));
-      setUser(mockUser);
-    } catch {
-      throw new Error('Registration failed');
+      if (response.error || !response.data) {
+        throw new Error(response.error || 'Registration failed');
+      }
+
+      const { token, user } = response.data;
+      
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('user_data', JSON.stringify(user));
+      setUser(user);
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setIsLoading(false);
     }
