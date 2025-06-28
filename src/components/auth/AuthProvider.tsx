@@ -44,7 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       try {
         const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
         setUser(userData);
-      } catch (error) {
+      } catch {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_data');
       }
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string) => {
     setIsLoading(true);
     try {
       const mockUser: User = {
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem('auth_token', mockToken);
       localStorage.setItem('user_data', JSON.stringify(mockUser));
       setUser(mockUser);
-    } catch (error) {
+    } catch {
       throw new Error('Login failed');
     } finally {
       setIsLoading(false);
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem('auth_token', mockToken);
       localStorage.setItem('user_data', JSON.stringify(mockUser));
       setUser(mockUser);
-    } catch (error) {
+    } catch {
       throw new Error('Registration failed');
     } finally {
       setIsLoading(false);

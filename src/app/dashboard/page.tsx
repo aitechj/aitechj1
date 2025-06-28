@@ -154,7 +154,7 @@ export default function DashboardPage() {
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm">Completed "React Hooks Deep Dive" lesson</p>
+                    <p className="text-white text-sm">Completed &quot;React Hooks Deep Dive&quot; lesson</p>
                     <p className="text-slate-400 text-xs">2 hours ago</p>
                   </div>
                 </div>
@@ -168,21 +168,21 @@ export default function DashboardPage() {
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-purple-600 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm">Earned "JavaScript Expert" badge</p>
+                    <p className="text-white text-sm">Earned &quot;JavaScript Expert&quot; badge</p>
                     <p className="text-slate-400 text-xs">1 day ago</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-yellow-600 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm">Started "Python for Data Science" course</p>
+                    <p className="text-white text-sm">Started &quot;Python for Data Science&quot; course</p>
                     <p className="text-slate-400 text-xs">2 days ago</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm">Completed "Node.js Fundamentals" course</p>
+                    <p className="text-white text-sm">Completed &quot;Node.js Fundamentals&quot; course</p>
                     <p className="text-slate-400 text-xs">1 week ago</p>
                   </div>
                 </div>

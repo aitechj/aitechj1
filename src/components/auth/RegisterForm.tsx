@@ -46,7 +46,7 @@ export default function RegisterForm({ onRegister, onSwitchToLogin }: RegisterFo
       if (onRegister) {
         await onRegister(formData.email, formData.password, formData.firstName, formData.lastName);
       }
-    } catch (err) {
+    } catch {
       setError('Registration failed. Please try again.');
     } finally {
       setIsLoading(false);

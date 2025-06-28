@@ -89,7 +89,7 @@ export default function ChatPage() {
                     </div>
                     <div className="bg-slate-700/50 rounded-lg p-4 max-w-md">
                       <p className="text-white">
-                        Hello! I'm your AI technical assistant. I can help you with programming questions, 
+                        Hello! I&apos;m your AI technical assistant. I can help you with programming questions, 
                         explain technical concepts, review code, and provide guidance on your projects. 
                         What would you like to learn about today?
                       </p>
@@ -124,7 +124,7 @@ export default function ChatPage() {
                         <p><strong className="text-white">useEffect:</strong></p>
                         <ul className="list-disc list-inside ml-4 space-y-1">
                           <li>Runs asynchronously after the DOM has been updated</li>
-                          <li>Non-blocking - doesn't delay the browser's painting</li>
+                          <li>Non-blocking - doesn&apos;t delay the browser&apos;s painting</li>
                           <li>Best for most side effects like data fetching, subscriptions</li>
                         </ul>
                         <p><strong className="text-white">useLayoutEffect:</strong></p>

@@ -22,7 +22,7 @@ export default function LoginForm({ onLogin, onSwitchToRegister }: LoginFormProp
       if (onLogin) {
         await onLogin(email, password);
       }
-    } catch (err) {
+    } catch {
       setError('Invalid email or password');
     } finally {
       setIsLoading(false);
@@ -98,7 +98,7 @@ export default function LoginForm({ onLogin, onSwitchToRegister }: LoginFormProp
 
         <div className="mt-6 text-center">
           <p className="text-slate-400">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <button
               onClick={onSwitchToRegister}
               className="text-blue-400 hover:text-blue-300 font-medium"
