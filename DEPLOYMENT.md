@@ -19,6 +19,10 @@
 
 2. **Deploy to Fly.io**:
    ```bash
+   # Use the validation script (recommended)
+   chmod +x scripts/deploy.sh && ./scripts/deploy.sh
+   
+   # Or deploy directly (manual)
    flyctl deploy -a aitechj-backend --wait-timeout 10m0s
    ```
 

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Pre-commit hook to prevent --image flag usage in deployment scripts
+
+echo "🔍 Checking for problematic --image flag usage..."
+
+if git diff --cached --name-only | xargs grep -l "flyctl.*--image" 2>/dev/null; then
+    echo "❌ ERROR: Found --image flag in deployment scripts"
+    echo "This causes volume mount configuration errors"
+    echo "Use 'flyctl deploy -a aitechj-backend --wait-timeout 10m0s' instead"
+    exit 1
+fi
+
+echo "✅ No problematic --image flag usage found"
+exit 0
