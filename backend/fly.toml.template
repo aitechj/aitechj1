@@ -1,0 +1,35 @@
+# fly.toml app configuration file template for fresh setup
+# Replace {{APP_NAME}} and {{VOLUME_NAME}} with actual values
+
+app = '{{APP_NAME}}'
+primary_region = 'iad'
+
+[build]
+
+[env]
+  PORT = '8080'
+  SPRING_PROFILES_ACTIVE = 'production'
+
+[[mounts]]
+  source = '{{VOLUME_NAME}}'
+  destination = '/data'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '20s'
+    grace_period = '30s'
+    method = 'GET'
+    path = '/actuator/health'
+
+[[vm]]
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -1,5 +1,16 @@
 # AI Learning Portal - Deployment Guide
 
+## Fresh Setup (Recommended for Persistent Issues)
+
+If you're experiencing persistent deployment issues, volume mount errors, or --image flag problems, consider setting up a fresh Fly.io app. See the comprehensive [FRESH_SETUP_GUIDE.md](FRESH_SETUP_GUIDE.md) for detailed instructions.
+
+**Quick Fresh Setup:**
+```bash
+cd backend
+chmod +x scripts/fresh-setup.sh
+./scripts/fresh-setup.sh aitechj-backend-v2
+```
+
 ## Backend Deployment (Fly.io)
 
 ### Prerequisites
