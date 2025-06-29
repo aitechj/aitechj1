@@ -20,7 +20,7 @@ if [ ! -f target/*.jar ]; then
 fi
 
 echo "🚀 Deploying to Fly.io app: $APP_NAME"
-flyctl deploy -a "$APP_NAME" --wait-timeout 10m0s
+flyctl deploy -a "$APP_NAME" --config fly.toml --wait-timeout 10m0s
 
 echo "✅ Deployment complete!"
 echo "🌐 App URL: https://$APP_NAME.fly.dev/"

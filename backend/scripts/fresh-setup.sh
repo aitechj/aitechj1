@@ -30,7 +30,7 @@ echo "📦 Building JAR file..."
 mvn clean package -DskipTests
 
 echo "🚀 Deploying to new app..."
-flyctl deploy -a "$APP_NAME" --wait-timeout 10m0s
+flyctl deploy -a "$APP_NAME" --config fly.toml --wait-timeout 10m0s
 
 echo "✅ Fresh setup complete!"
 echo "🌐 New app URL: https://$APP_NAME.fly.dev/"
