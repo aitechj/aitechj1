@@ -29,3 +29,9 @@ Despite PRs #42 and #43 removing these files, the backend deployment remains bro
 - Fly.io logs show Spring Boot startup messages instead of Next.js
 
 Timestamp: 2025-06-29 09:30:26 UTC
+
+## Update: Secrets Updated
+User has updated GitHub Actions secrets (FLY_API_TOKEN and Vercel credentials).
+Testing deployment with updated authentication.
+
+Test timestamp: 2025-06-29 09:39:26 UTC
