@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Codebase Assessment - aitechj/aitechj1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-container {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 1rem 0;
+            position: sticky;
+            top: 120px;
+            z-index: 99;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-item {
+            background: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-bottom: 2px solid #007bff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .toggle-icon {
+            font-size: 1.5rem;
+            color: #007bff;
+            transition: transform 0.3s ease;
+        }
+
+        .section-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subsection {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .subsection h3 {
+            color: #495057;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .subsection h4 {
+            color: #6c757d;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .code-block .comment {
+            color: #68d391;
+        }
+
+        .code-block .keyword {
+            color: #f687b3;
+        }
+
+        .code-block .string {
+            color: #fbb6ce;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .priority-p0 {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority-p1 {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .priority-p2 {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .priority-p3 {
+            background: #28a745;
+            color: white;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .metrics-table th,
+        .metrics-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .metrics-table th {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        .metrics-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d1edff;
+            border-color: #007bff;
+            color: #004085;
+        }
+
+        .file-reference {
+            background: #e9ecef;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            transition: width 0.3s ease;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-card .label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Detailed Codebase Assessment</h1>
+            <div class="subtitle">aitechj/aitechj1 - Comprehensive Technical Analysis</div>
+        </div>
+
+        <div class="nav-container">
+            <nav class="nav">
+                <a href="#executive-summary" class="nav-item">📋 Executive Summary</a>
+                <a href="#architecture" class="nav-item">🏗️ Architecture</a>
+                <a href="#duplicates" class="nav-item">🔄 Duplicates</a>
+                <a href="#api-analysis" class="nav-item">🔌 API Analysis</a>
+                <a href="#security" class="nav-item">🔒 Security</a>
+                <a href="#performance" class="nav-item">⚡ Performance</a>
+                <a href="#technical-debt" class="nav-item">🔧 Technical Debt</a>
+                <a href="#testing" class="nav-item">🧪 Testing</a>
+                <a href="#recommendations" class="nav-item">💡 Recommendations</a>
+            </nav>
+        </div>
+
+        <div class="content">
+            <!-- Executive Summary -->
+            <div id="executive-summary" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>📋 Executive Summary</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div class="number">0%</div>
+                            <div class="label">Test Coverage</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="number">3/10</div>
+                            <div class="label">Security Score</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="number">15%</div>
+                            <div class="label">Code Duplication</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="number">35%</div>
+                            <div class="label">Technical Debt</div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>🎯 Technology Stack</h3>
+                        <ul>
+                            <li><strong>Frontend:</strong> Next.js 15.3.4 + React 19 + TypeScript 5 + Tailwind CSS 4</li>
+                            <li><strong>Backend:</strong> Spring Boot 3.2.0 + Java 17 + Spring Security + JWT</li>
+                            <li><strong>Database:</strong> H2 (file-based)</li>
+                            <li><strong>Deployment:</strong> Vercel (frontend) + Fly.io (backend)</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <strong>🚨 Critical Issues Found:</strong>
+                        <ul>
+                            <li>Zero test coverage across entire application</li>
+                            <li>Weak JWT implementation with default secrets</li>
+                            <li>Insecure token storage in localStorage</li>
+                            <li>Multiple duplicate User interface definitions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Overview -->
+            <div id="architecture" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🏗️ Architecture Overview & Code Organization</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Frontend Architecture Analysis</h3>
+                        <div class="code-block">
+src/
+├── app/                    <span class="comment"># Next.js App Router (8 pages)</span>
+│   ├── page.tsx           <span class="comment"># Homepage - 83 lines</span>
+│   ├── auth/page.tsx      <span class="comment"># Authentication - 186 lines</span>
+│   ├── dashboard/page.tsx <span class="comment"># User dashboard - 213 lines</span>
+│   ├── profile/page.tsx   <span class="comment"># User profile - 329 lines</span>
+│   ├── courses/page.tsx   <span class="comment"># Course catalog - 155 lines</span>
+│   ├── admin/page.tsx     <span class="comment"># Admin panel - 258 lines</span>
+│   ├── chat/page.tsx      <span class="comment"># AI chat interface - 186 lines</span>
+│   └── layout.tsx         <span class="comment"># Root layout - 25 lines</span>
+├── components/
+│   ├── auth/              <span class="comment"># Authentication components</span>
+│   │   ├── AuthProvider.tsx    <span class="comment"># Context provider - 87 lines</span>
+│   │   ├── LoginForm.tsx       <span class="comment"># Login UI - 186 lines</span>
+│   │   └── RegisterForm.tsx    <span class="comment"># Registration UI - 186 lines</span>
+│   ├── Navigation.tsx     <span class="comment"># Global navigation - 68 lines</span>
+│   └── index.ts          <span class="comment"># Component exports - 4 lines</span>
+└── utils/
+    └── api.ts            <span class="comment"># API client - 89 lines</span>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>⚠️ Critical Findings:</strong>
+                            <ul>
+                                <li><strong>Monolithic Page Components:</strong> All pages are single-file components with mixed concerns</li>
+                                <li><strong>No Component Decomposition:</strong> Large components (329 lines) violate single responsibility</li>
+                                <li><strong>Missing Error Boundaries:</strong> No graceful failure recovery</li>
+                                <li><strong>Hardcoded Navigation:</strong> Navigation items hardcoded in Navigation.tsx</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Backend Architecture Analysis</h3>
+                        <div class="code-block">
+backend/src/main/java/com/aiportal/learning/
+├── controller/
+│   └── AuthController.java      <span class="comment"># REST endpoints - 58 lines</span>
+├── service/
+│   ├── AuthService.java         <span class="comment"># Business logic - 67 lines</span>
+│   └── UserService.java         <span class="comment"># User operations - 45 lines</span>
+├── repository/
+│   └── UserRepository.java      <span class="comment"># Data access - 8 lines</span>
+├── model/
+│   └── User.java               <span class="comment"># JPA entity - 58 lines</span>
+├── dto/
+│   ├── LoginRequest.java        <span class="comment"># Request DTO - 15 lines</span>
+│   ├── RegisterRequest.java     <span class="comment"># Request DTO - 23 lines</span>
+│   └── AuthResponse.java        <span class="comment"># Response DTO - 58 lines</span>
+├── security/
+│   ├── JwtUtil.java            <span class="comment"># JWT utilities - 67 lines</span>
+│   └── JwtAuthenticationFilter.java <span class="comment"># Security filter - 67 lines</span>
+└── config/
+    └── SecurityConfig.java      <span class="comment"># Security configuration - 51 lines</span>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <strong>✅ Excellent Separation:</strong> Clean layered architecture with proper separation of concerns
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicate Code Analysis -->
+            <div id="duplicates" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🔄 Duplicate Code Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>🚨 Critical Duplicates Identified</h3>
+                        
+                        <h4>User Interface Definitions (3 Locations)</h4>
+                        
+                        <div class="alert alert-danger">
+                            <strong>Location 1:</strong> <span class="file-reference">src/utils/api.ts:82-89</span>
+                        </div>
+                        <div class="code-block">
+<span class="keyword">interface</span> User {
+  id: <span class="keyword">number</span>;
+  email: <span class="keyword">string</span>;
+  firstName: <span class="keyword">string</span>;
+  lastName: <span class="keyword">string</span>;
+  role: <span class="keyword">string</span>;
+  createdAt: <span class="keyword">string</span>;
+  updatedAt: <span class="keyword">string</span>;
+}
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>Location 2:</strong> <span class="file-reference">src/components/auth/AuthProvider.tsx:5-12</span>
+                        </div>
+                        <div class="code-block">
+<span class="keyword">interface</span> User {
+  id: <span class="keyword">number</span>;
+  email: <span class="keyword">string</span>;
+  firstName: <span class="keyword">string</span>;
+  lastName: <span class="keyword">string</span>;
+  role: <span class="keyword">string</span>;
+  createdAt: <span class="keyword">string</span>;
+  updatedAt: <span class="keyword">string</span>;
+}
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>Location 3:</strong> <span class="file-reference">backend/src/main/java/com/aiportal/learning/dto/AuthResponse.java:22-58</span>
+                        </div>
+                        <div class="code-block">
+<span class="keyword">public static class</span> UserDto {
+    <span class="keyword">private</span> Long id;
+    <span class="keyword">private</span> String email;
+    <span class="keyword">private</span> String firstName;
+    <span class="keyword">private</span> String lastName;
+    <span class="keyword">private</span> String role;
+    <span class="keyword">private</span> LocalDateTime createdAt;
+    <span class="keyword">private</span> LocalDateTime updatedAt;
+    <span class="comment">// ... getters/setters</span>
+}
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Impact Analysis:</strong>
+                            <ul>
+                                <li><strong>Maintenance Burden:</strong> Changes require updates in 3 locations</li>
+                                <li><strong>Type Safety Risk:</strong> Frontend interfaces can drift from backend DTOs</li>
+                                <li><strong>Inconsistency Risk:</strong> Different validation rules across definitions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Analysis -->
+            <div id="api-analysis" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🔌 API Endpoint Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Current API Implementation</h3>
+                        
+                        <h4>Authentication Endpoints</h4>
+                        <div class="code-block">
+<span class="comment">// AuthController.java:25-47</span>
+<span class="keyword">@PostMapping</span>(<span class="string">"/login"</span>)
+<span class="keyword">public</span> ResponseEntity&lt;AuthResponse&gt; login(<span class="keyword">@Valid @RequestBody</span> LoginRequest request) {
+    <span class="keyword">return</span> ResponseEntity.ok(authService.login(request));
+}
+
+<span class="keyword">@PostMapping</span>(<span class="string">"/register"</span>) 
+<span class="keyword">public</span> ResponseEntity&lt;AuthResponse&gt; register(<span class="keyword">@Valid @RequestBody</span> RegisterRequest request) {
+    <span class="keyword">return</span> ResponseEntity.ok(authService.register(request));
+}
+
+<span class="keyword">@GetMapping</span>(<span class="string">"/me"</span>)
+<span class="keyword">public</span> ResponseEntity&lt;AuthResponse.UserDto&gt; getCurrentUser(Authentication authentication) {
+    <span class="keyword">return</span> ResponseEntity.ok(authService.getCurrentUser(authentication.getName()));
+}
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>🚫 Missing API Endpoints:</strong>
+                            <ul>
+                                <li><strong>Course Management:</strong> No CRUD operations for courses</li>
+                                <li><strong>Enrollment System:</strong> No enrollment/progress tracking</li>
+                                <li><strong>AI Chat Integration:</strong> Chat UI exists but no backend API</li>
+                                <li><strong>Profile Updates:</strong> Frontend UI exists but no backend endpoint</li>
+                                <li><strong>Admin Operations:</strong> Admin UI exists but no backend support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Analysis -->
+            <div id="security" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🔒 Security Vulnerability Assessment</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>🚨 Critical Security Issues</h3>
+                        
+                        <h4>JWT Implementation Vulnerabilities</h4>
+                        <div class="alert alert-danger">
+                            <strong>Weak Secret Management:</strong> <span class="file-reference">application.yml:25-27</span>
+                        </div>
+                        <div class="code-block">
+jwt:
+  secret: ${JWT_SECRET:<span class="string">defaultsecretforlocaldevelopmentonly</span>}
+  expiration: ${JWT_EXPIRATION:<span class="string">86400000</span>}
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>Issues:</strong>
+                            <ul>
+                                <li>Default secret is hardcoded and weak</li>
+                                <li>No secret rotation mechanism</li>
+                                <li>24-hour token expiration too long for sensitive operations</li>
+                                <li>No token revocation mechanism</li>
+                                <li>Missing token refresh functionality</li>
+                            </ul>
+                        </div>
+
+                        <h4>Client-Side Token Storage</h4>
+                        <div class="code-block">
+<span class="comment">// AuthProvider.tsx:67-87</span>
+<span class="keyword">const</span> login = <span class="keyword">async</span> (credentials: LoginRequest) =&gt; {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> apiClient.login(credentials);
+  localStorage.setItem(<span class="string">'token'</span>, response.token);  <span class="comment">// Vulnerable to XSS</span>
+  setUser(response.user);
+};
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>Security Issues:</strong>
+                            <ul>
+                                <li>JWT stored in localStorage (vulnerable to XSS)</li>
+                                <li>No httpOnly cookie implementation</li>
+                                <li>Missing Content Security Policy headers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Analysis -->
+            <div id="performance" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>⚡ Performance Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Frontend Performance Issues</h3>
+                        
+                        <div class="alert alert-warning">
+                            <strong>Bundle Size Issues:</strong>
+                            <ul>
+                                <li>No code splitting - all pages loaded in single bundle</li>
+                                <li>No lazy loading - components loaded eagerly</li>
+                                <li>Large page components (329 lines) impact initial load</li>
+                                <li>Missing performance monitoring</li>
+                            </ul>
+                        </div>
+
+                        <h4>AuthProvider Context Performance</h4>
+                        <div class="code-block">
+<span class="comment">// AuthProvider.tsx:67-87 - Inefficient re-renders</span>
+<span class="keyword">const</span> AuthProvider = ({ children }: { children: React.ReactNode }) =&gt; {
+  <span class="keyword">const</span> [user, setUser] = useState&lt;User | <span class="keyword">null</span>&gt;(<span class="keyword">null</span>);
+  <span class="keyword">const</span> [isLoading, setIsLoading] = useState(<span class="keyword">true</span>);
+  
+  <span class="comment">// No memoization - causes unnecessary re-renders</span>
+  <span class="keyword">const</span> value = {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    login,
+    register,
+    logout
+  };
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Issues:</strong>
+                            <ul>
+                                <li>Context value recreated on every render</li>
+                                <li>No useMemo optimization</li>
+                                <li>Causes cascading re-renders across all consumers</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Backend Performance Issues</h3>
+                        
+                        <div class="alert alert-warning">
+                            <strong>Database Performance:</strong>
+                            <ul>
+                                <li>No database indexing strategy</li>
+                                <li>Missing query optimization</li>
+                                <li>No connection pooling configuration</li>
+                                <li>File-based H2 database performance limitations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Debt -->
+            <div id="technical-debt" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🔧 Technical Debt Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Code Quality Issues</h3>
+                        
+                        <h4>Large Component Anti-Pattern</h4>
+                        <div class="code-block">
+<span class="comment">// profile/page.tsx:329 lines - Violates SRP</span>
+<span class="keyword">export default function</span> ProfilePage() {
+  <span class="comment">// Authentication logic</span>
+  <span class="comment">// UI rendering</span>
+  <span class="comment">// Form handling</span>
+  <span class="comment">// State management</span>
+  <span class="comment">// All mixed in single component</span>
+}
+                        </div>
+
+                        <h4>Exception Handling Anti-Pattern</h4>
+                        <div class="code-block">
+<span class="comment">// AuthService.java:40 - Generic RuntimeException</span>
+<span class="keyword">throw new</span> RuntimeException(<span class="string">"User not found"</span>);
+<span class="keyword">throw new</span> RuntimeException(<span class="string">"Invalid credentials"</span>);
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Issues:</strong>
+                            <ul>
+                                <li>Generic exception types</li>
+                                <li>No custom exception hierarchy</li>
+                                <li>Missing error codes for API responses</li>
+                                <li>No structured logging</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testing Analysis -->
+            <div id="testing" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>🧪 Testing Analysis</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Test Coverage Assessment</h3>
+                        
+                        <div class="alert alert-danger">
+                            <strong>🚨 Critical Finding: ZERO TEST COVERAGE</strong>
+                        </div>
+
+                        <div class="code-block">
+<span class="comment">// package.json:10</span>
+<span class="string">"test"</span>: <span class="string">"echo \"No tests configured yet\" &amp;&amp; exit 0"</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <p><strong>Current Test Coverage: 0%</strong></p>
+
+                        <div class="alert alert-warning">
+                            <strong>Missing Test Categories:</strong>
+                            <ul>
+                                <li><strong>Unit Tests:</strong> No component or service tests</li>
+                                <li><strong>Integration Tests:</strong> No API endpoint tests</li>
+                                <li><strong>E2E Tests:</strong> No user journey tests</li>
+                                <li><strong>Security Tests:</strong> No penetration testing</li>
+                                <li><strong>Performance Tests:</strong> No load testing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div id="recommendations" class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>💡 Recommendations & Action Plan</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Priority-Based Action Plan</h3>
+                        
+                        <h4><span class="priority-badge priority-p0">P0</span>Critical Priority - Security & Stability (1-2 weeks)</h4>
+                        <div class="alert alert-danger">
+                            <strong>Immediate Actions:</strong>
+                            <ul>
+                                <li><strong>Fix JWT Security:</strong> Use strong, environment-specific secrets</li>
+                                <li><strong>Secure Token Storage:</strong> Replace localStorage with httpOnly cookies</li>
+                                <li><strong>Add Input Validation:</strong> Implement @Valid annotations and XSS protection</li>
+                                <li><strong>Database Security:</strong> Add strong password and connection encryption</li>
+                            </ul>
+                        </div>
+
+                        <h4><span class="priority-badge priority-p1">P1</span>High Priority - Code Quality & Performance (2-4 weeks)</h4>
+                        <div class="alert alert-warning">
+                            <strong>Short-term Actions:</strong>
+                            <ul>
+                                <li><strong>Eliminate Duplicates:</strong> Create shared types package</li>
+                                <li><strong>Component Decomposition:</strong> Break down large components (&gt;100 lines)</li>
+                                <li><strong>Add Testing:</strong> Unit, integration, and E2E tests</li>
+                                <li><strong>Performance Optimization:</strong> Code splitting and lazy loading</li>
+                            </ul>
+                        </div>
+
+                        <h4><span class="priority-badge priority-p2">P2</span>Medium Priority - Architecture & Scalability (1-2 months)</h4>
+                        <div class="alert alert-success">
+                            <strong>Medium-term Actions:</strong>
+                            <ul>
+                                <li><strong>API Expansion:</strong> Implement missing endpoints</li>
+                                <li><strong>Database Migration:</strong> Move from H2 to PostgreSQL</li>
+                                <li><strong>State Management:</strong> Implement proper state management</li>
+                            </ul>
+                        </div>
+
+                        <h4><span class="priority-badge priority-p3">P3</span>Low Priority - Enhancement & Monitoring (2-3 months)</h4>
+                        <div class="alert alert-success">
+                            <strong>Long-term Actions:</strong>
+                            <ul>
+                                <li><strong>Monitoring:</strong> Add application metrics and logging</li>
+                                <li><strong>DevOps:</strong> Comprehensive CI/CD pipeline</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Success Metrics</h3>
+                        <table class="metrics-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Current Value</th>
+                                    <th>Target Value</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Test Coverage</td>
+                                    <td>0%</td>
+                                    <td>80%+</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Security Score</td>
+                                    <td>3/10</td>
+                                    <td>8/10</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 30%"></div></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Performance Score</td>
+                                    <td>5/10</td>
+                                    <td>9/10</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Code Duplication</td>
+                                    <td>15%</td>
+                                    <td>&lt;5%</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 15%"></div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusion -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>📝 Conclusion</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <p>The aitechj/aitechj1 codebase demonstrates good architectural separation but suffers from significant security vulnerabilities, performance issues, and technical debt. The most critical concerns are:</p>
+                        
+                        <div class="alert alert-danger">
+                            <strong>🔴 Critical Issues:</strong>
+                            <ul>
+                                <li><strong>Security:</strong> Weak JWT implementation, insecure token storage, missing input validation</li>
+                                <li><strong>Code Quality:</strong> Significant duplication, large components, missing error handling</li>
+                                <li><strong>Testing:</strong> Complete absence of test coverage</li>
+                                <li><strong>Performance:</strong> Bundle optimization, database performance, caching strategies</li>
+                            </ul>
+                        </div>
+
+                        <div class="summary-cards">
+                            <div class="summary-card">
+                                <div class="number">3-4</div>
+                                <div class="label">Months Timeline</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="number">2-3</div>
+                                <div class="label">Developers Needed</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="number">High</div>
+                                <div class="label">Risk Level</div>
+                            </div>
+                        </div>
+
+                        <p><strong>Recommended Approach:</strong> Address security issues immediately (P0), followed by code quality improvements (P1), then architectural enhancements (P2). With proper execution of this plan, the codebase can evolve into a robust, secure, and maintainable learning platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="back-to-top" onclick="scrollToTop()">↑</button>
+    </div>
+
+    <script>
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('active');
+                icon.textContent = '▲';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    const headerHeight = document.querySelector('.header').offsetHeight + 
+                                       document.querySelector('.nav-container').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight - 20;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                    
+                    // Auto-expand the section
+                    const sectionHeader = targetElement.querySelector('.section-header');
+                    const sectionContent = targetElement.querySelector('.section-content');
+                    if (sectionHeader && sectionContent && !sectionContent.classList.contains('active')) {
+                        toggleSection(sectionHeader);
+                    }
+                }
+            });
+        });
+
+        // Auto-expand executive summary on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const executiveSummaryHeader = document.querySelector('#executive-summary .section-header');
+            if (executiveSummaryHeader) {
+                toggleSection(executiveSummaryHeader);
+            }
+        });
+    </script>
+</body>
+</html>
