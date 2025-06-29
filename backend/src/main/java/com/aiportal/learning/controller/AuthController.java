@@ -75,7 +75,6 @@ public class AuthController {
         cookie.setSecure(true); // HTTPS only
         cookie.setPath("/");
         cookie.setMaxAge(3600); // 1 hour (matches JWT expiration)
-        cookie.setSameSite(Cookie.SameSite.NONE); // Allow cross-origin
         response.addCookie(cookie);
     }
     
@@ -85,7 +84,6 @@ public class AuthController {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0); // Expire immediately
-        cookie.setSameSite(Cookie.SameSite.NONE);
         response.addCookie(cookie);
     }
 }
