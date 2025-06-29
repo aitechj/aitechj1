@@ -1,16 +1,5 @@
 # AI Learning Portal - Deployment Guide
 
-## Fresh Setup (Recommended for Persistent Issues)
-
-If you're experiencing persistent deployment issues, volume mount errors, or --image flag problems, consider setting up a fresh Fly.io app. See the comprehensive [FRESH_SETUP_GUIDE.md](FRESH_SETUP_GUIDE.md) for detailed instructions.
-
-**Quick Fresh Setup:**
-```bash
-cd backend
-chmod +x scripts/fresh-setup.sh
-./scripts/fresh-setup.sh aitechj-backend-v2
-```
-
 ## Backend Deployment (Fly.io)
 
 ### Prerequisites
@@ -34,21 +23,21 @@ chmod +x scripts/fresh-setup.sh
    chmod +x scripts/deploy.sh && ./scripts/deploy.sh
    
    # Or deploy directly (manual)
-   flyctl deploy -a aitechj-backend --wait-timeout 10m0s
+   flyctl deploy -a aitechj-backend-v2 --wait-timeout 10m0s
    ```
 
 3. **Verify deployment**:
    ```bash
    # Check health endpoint
-   curl https://aitechj-backend.fly.dev/actuator/health
+   curl https://aitechj-backend-v2.fly.dev/actuator/health
    
    # Check logs
-   flyctl logs -a aitechj-backend
+   flyctl logs -a aitechj-backend-v2
    ```
 
 ### Backend Configuration
 
-- **URL**: https://aitechj-backend.fly.dev/
+- **URL**: https://aitechj-backend-v2.fly.dev/
 - **Database**: H2 file-based with persistent volume at `/data`
 - **Health Check**: Port 8080, endpoint `/actuator/health`
 - **Environment**: Production with JWT authentication
@@ -85,7 +74,7 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 ```json
 {
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://aitechj-backend.fly.dev"
+    "NEXT_PUBLIC_API_URL": "https://aitechj-backend-v2.fly.dev"
   }
 }
 ```
@@ -97,7 +86,7 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 **Health Check Failures**:
 - Health checks may temporarily fail during deployment
 - Wait 30-60 seconds for the application to fully start
-- Check logs: `flyctl logs -a aitechj-backend`
+- Check logs: `flyctl logs -a aitechj-backend-v2`
 
 **JAR File Missing Error**:
 - Ensure you run `mvn clean package -DskipTests` before deployment
@@ -109,21 +98,21 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 
 **Deployment Timeout Failures**:
 - Spring Boot applications take 12+ seconds to start, which can cause deployment timeouts
-- Use increased wait timeout: `flyctl deploy -a aitechj-backend --wait-timeout 10m0s`
-- Monitor logs during deployment: `flyctl logs -a aitechj-backend`
+- Use increased wait timeout: `flyctl deploy -a aitechj-backend-v2 --wait-timeout 10m0s`
+- Monitor logs during deployment: `flyctl logs -a aitechj-backend-v2`
 - Proxy connection errors during startup are normal and will resolve once the app is ready
 
 **"Unsuccessful Command" Errors**:
 - Usually caused by insufficient deployment wait timeout
 - Increase timeout to 10 minutes to accommodate Spring Boot startup time
-- Verify machine status after deployment: `flyctl status -a aitechj-backend`
+- Verify machine status after deployment: `flyctl status -a aitechj-backend-v2`
 
 **Volume Mount Configuration Errors**:
 - Error: "machine has a volume mounted but app config does not specify a volume"
 - **Root Cause**: Using `--image` flag with pre-built image hash that contains outdated fly.toml
 - **Solution**: Always deploy from source without `--image` flag
-- **Wrong**: `flyctl deploy --image registry.fly.io/aitechj-backend:deployment-{hash}`
-- **Correct**: `flyctl deploy -a aitechj-backend --wait-timeout 10m0s`
+- **Wrong**: `flyctl deploy --image registry.fly.io/aitechj-backend-v2:deployment-{hash}`
+- **Correct**: `flyctl deploy -a aitechj-backend-v2 --wait-timeout 10m0s`
 - When using `--image`, Fly.io reads config from the image, not your local fly.toml
 
 **IMPORTANT**: The deployment validation script at `backend/scripts/deploy.sh` automatically prevents --image flag usage and ensures correct deployment. Always use this script for deployments.
@@ -136,7 +125,7 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 - Ensure all dependencies are installed: `pnpm install`
 
 **API Connection Issues**:
-- Verify backend is running: `curl https://aitechj-backend.fly.dev/actuator/health`
+- Verify backend is running: `curl https://aitechj-backend-v2.fly.dev/actuator/health`
 - Check browser network tab for CORS errors
 - Verify `NEXT_PUBLIC_API_URL` environment variable
 
