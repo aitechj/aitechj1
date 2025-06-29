@@ -17,12 +17,18 @@ Missing or invalid `FLY_API_TOKEN` in GitHub repository secrets.
 3. Set secret name as `FLY_API_TOKEN`
 
 ## Technical Status
-✅ All code fixes implemented and merged (PRs #22-#27)
+✅ All code fixes implemented and merged (PRs #22-#28)
 ✅ Maven build step correctly configured in GitHub Actions workflow
 ✅ Deployment configuration properly set up
 ❌ Authentication token needs to be updated by repository owner
 
-## Next Steps
-After fixing the authentication token, push any change to main branch to trigger automated deployment.
+## Test Deployment Status
+This PR will trigger GitHub Actions to verify:
+- Maven build step executes successfully
+- JAR file is created in backend/target/
+- Deployment fails only due to authentication (not code issues)
 
-Created: $(date)
+## Next Steps
+After fixing the authentication token, merge this PR to trigger automated deployment.
+
+Updated: $(date)
