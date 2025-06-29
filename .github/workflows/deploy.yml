@@ -66,8 +66,7 @@ jobs:
 
       - name: Build Spring Boot JAR
         run: |
-          chmod +x mvnw
-          ./mvnw clean package -DskipTests
+          mvn clean package -DskipTests
         working-directory: ./backend
 
       - name: Setup Fly.io CLI
