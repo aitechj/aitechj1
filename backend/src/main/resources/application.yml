@@ -23,8 +23,8 @@ spring:
       enabled: false
 
 jwt:
-  secret: ${JWT_SECRET:defaultsecretforlocaldevelopmentonly}
-  expiration: ${JWT_EXPIRATION:86400000}
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000}
 
 management:
   endpoints:
