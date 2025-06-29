@@ -56,7 +56,9 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:3000",
             "https://*.vercel.app",
-            "https://aitechj-learning-platform.vercel.app"
+            "https://aitechj-learning-platform.vercel.app",
+            "https://aitechj.com",
+            "https://*.aitechj.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
