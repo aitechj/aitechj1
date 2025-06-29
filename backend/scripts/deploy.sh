@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-APP_NAME=${FLY_APP_NAME:-"aitechj-backend"}
+APP_NAME=${FLY_APP_NAME:-"aitechj-backend-v2"}
 
 echo "🚀 Starting Fly.io deployment validation for app: $APP_NAME"
 
