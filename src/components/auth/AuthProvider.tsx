@@ -40,23 +40,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        try {
-          const { authApi } = await import('@/utils/api');
-          const response = await authApi.getCurrentUser();
-          
-          if (response.data) {
-            setUser(response.data);
-            localStorage.setItem('user_data', JSON.stringify(response.data));
-          } else {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user_data');
-          }
-        } catch {
-          localStorage.removeItem('auth_token');
-          localStorage.removeItem('user_data');
+      try {
+        const { authApi } = await import('@/utils/api');
+        const response = await authApi.getCurrentUser();
+        
+        if (response.data) {
+          setUser(response.data);
         }
+      } catch {
+        setUser(null);
       }
       setIsLoading(false);
     };
@@ -74,10 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(response.error || 'Login failed');
       }
 
-      const { token, user } = response.data;
-      
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('user_data', JSON.stringify(user));
+      const { user } = response.data;
       setUser(user);
     } catch (error) {
       throw new Error(error instanceof Error ? error.message : 'Login failed');
@@ -96,10 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(response.error || 'Registration failed');
       }
 
-      const { token, user } = response.data;
-      
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('user_data', JSON.stringify(user));
+      const { user } = response.data;
       setUser(user);
     } catch (error) {
       throw new Error(error instanceof Error ? error.message : 'Registration failed');
@@ -108,9 +94,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
+  const logout = async () => {
+    try {
+      const { apiClient } = await import('@/utils/api');
+      await apiClient.post('/api/auth/logout', {});
+    } catch (error) {
+      console.error('Logout request failed:', error);
+    }
     setUser(null);
   };
 

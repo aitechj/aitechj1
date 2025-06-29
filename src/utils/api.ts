@@ -11,10 +11,8 @@ interface ApiResponse<T> {
 
 class ApiClient {
   private getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem('auth_token');
     return {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
     };
   }
 
@@ -22,6 +20,7 @@ class ApiClient {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
+        credentials: 'include', // Include cookies in requests
         headers: {
           ...this.getAuthHeaders(),
           ...options.headers,
@@ -102,4 +101,7 @@ export const authApi = {
   
   getCurrentUser: () => 
     apiClient.get<User>('/api/auth/me'),
+  
+  logout: () => 
+    apiClient.post<void>('/api/auth/logout', {}),
 };
