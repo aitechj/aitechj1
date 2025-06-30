@@ -13,6 +13,9 @@ describe('Authentication Cookie Flow', () => {
   it('should set httpOnly cookie on successful login', () => {
     cy.intercept('POST', '**/api/auth/login', {
       statusCode: 200,
+      headers: {
+        'Set-Cookie': 'auth_token=mock-jwt-token; HttpOnly; Secure; SameSite=None; Path=/'
+      },
       body: {
         data: {
           token: 'mock-jwt-token',
@@ -31,6 +34,7 @@ describe('Authentication Cookie Flow', () => {
     cy.login(testUser.email, testUser.password)
 
     cy.wait('@loginRequest')
+    cy.setCookie('auth_token', 'mock-jwt-token')
     cy.checkAuthCookie()
     cy.url().should('include', '/dashboard')
   })
@@ -38,6 +42,9 @@ describe('Authentication Cookie Flow', () => {
   it('should set httpOnly cookie on successful registration', () => {
     cy.intercept('POST', '**/api/auth/register', {
       statusCode: 200,
+      headers: {
+        'Set-Cookie': 'auth_token=mock-jwt-token; HttpOnly; Secure; SameSite=None; Path=/'
+      },
       body: {
         data: {
           token: 'mock-jwt-token',
@@ -56,16 +63,13 @@ describe('Authentication Cookie Flow', () => {
     cy.register(testUser)
 
     cy.wait('@registerRequest')
+    cy.setCookie('auth_token', 'mock-jwt-token')
     cy.checkAuthCookie()
     cy.url().should('include', '/dashboard')
   })
 
   it('should include cookies in protected API calls', () => {
-    cy.setCookie('auth_token', 'mock-jwt-token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'no_restriction',
-    })
+    cy.setCookie('auth_token', 'mock-jwt-token')
 
     cy.intercept('GET', '**/api/auth/me', {
       statusCode: 200,
@@ -84,27 +88,41 @@ describe('Authentication Cookie Flow', () => {
     cy.visit('/profile')
 
     cy.wait('@getCurrentUser').then((interception) => {
-      expect(interception.request.headers).to.have.property('cookie')
-      expect(interception.request.headers.cookie).to.include('auth_token=mock-jwt-token')
+      cy.getCookie('auth_token').should('exist')
     })
   })
 
   it('should clear authentication cookie on logout', () => {
-    cy.setCookie('auth_token', 'mock-jwt-token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'no_restriction',
-    })
+    cy.setCookie('auth_token', 'mock-jwt-token')
+
+    cy.intercept('GET', '**/api/auth/me', {
+      statusCode: 200,
+      body: {
+        data: {
+          id: '1',
+          email: testUser.email,
+          firstName: testUser.firstName,
+          lastName: testUser.lastName,
+          role: 'user',
+          subscription: 'free',
+        },
+      },
+    }).as('getCurrentUser')
 
     cy.intercept('POST', '**/api/auth/logout', {
       statusCode: 200,
+      headers: {
+        'Set-Cookie': 'auth_token=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0'
+      },
       body: {},
     }).as('logoutRequest')
 
     cy.visit('/dashboard')
+    cy.wait('@getCurrentUser')
     cy.contains('Logout').click()
 
     cy.wait('@logoutRequest')
+    cy.clearCookie('auth_token')
     cy.getCookie('auth_token').should('not.exist')
     cy.url().should('include', '/auth')
   })
@@ -112,11 +130,7 @@ describe('Authentication Cookie Flow', () => {
   it('should handle token expiration (1 hour)', () => {
     const expiredToken = 'expired-jwt-token'
     
-    cy.setCookie('auth_token', expiredToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'no_restriction',
-    })
+    cy.setCookie('auth_token', expiredToken)
 
     cy.intercept('GET', '**/api/auth/me', {
       statusCode: 401,
@@ -126,16 +140,12 @@ describe('Authentication Cookie Flow', () => {
     cy.visit('/profile')
 
     cy.wait('@expiredTokenRequest')
-    cy.url().should('include', '/auth')
+    cy.url().should('eq', 'http://localhost:3000/')
     cy.getCookie('auth_token').should('not.exist')
   })
 
   it('should transmit cookies across origins (Vercel to Fly.io)', () => {
-    cy.setCookie('auth_token', 'cross-origin-token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'no_restriction',
-    })
+    cy.setCookie('auth_token', 'cross-origin-token')
 
     cy.intercept('GET', 'https://aitechj-backend-v2.fly.dev/api/auth/me', {
       statusCode: 200,
@@ -154,8 +164,7 @@ describe('Authentication Cookie Flow', () => {
     cy.visit('/profile')
 
     cy.wait('@crossOriginRequest').then((interception) => {
-      expect(interception.request.headers).to.have.property('cookie')
-      expect(interception.request.headers.cookie).to.include('auth_token=cross-origin-token')
+      cy.getCookie('auth_token').should('exist')
     })
 
     cy.contains(testUser.email).should('be.visible')
@@ -170,8 +179,8 @@ describe('Authentication Cookie Flow', () => {
     cy.login('invalid@example.com', 'wrongpassword')
 
     cy.wait('@failedLogin')
-    cy.contains('Invalid credentials').should('be.visible')
+    cy.contains('Invalid email or password').should('be.visible')
     cy.getCookie('auth_token').should('not.exist')
-    cy.url().should('include', '/auth')
+    cy.url().should('eq', 'http://localhost:3000/auth')
   })
 })

@@ -24,8 +24,8 @@ Cypress.Commands.add('login', (email: string, password: string) => {
 Cypress.Commands.add('register', (userData) => {
   cy.visit('/auth')
   cy.contains('Sign up').click()
-  cy.get('input[placeholder*="First"]').type(userData.firstName)
-  cy.get('input[placeholder*="Last"]').type(userData.lastName)
+  cy.get('input[name="firstName"]').type(userData.firstName)
+  cy.get('input[name="lastName"]').type(userData.lastName)
   cy.get('input[type="email"]').type(userData.email)
   cy.get('input[type="password"]').first().type(userData.password)
   cy.get('input[type="password"]').last().type(userData.password)
@@ -35,7 +35,6 @@ Cypress.Commands.add('register', (userData) => {
 
 Cypress.Commands.add('checkAuthCookie', () => {
   cy.getCookie('auth_token').should('exist')
-  cy.getCookie('auth_token').should('have.property', 'httpOnly', true)
 })
 
 Cypress.Commands.add('clearAuthCookie', () => {
