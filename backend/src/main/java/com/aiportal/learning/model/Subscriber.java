@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "subscribers")
+@EntityListeners(com.aiportal.learning.audit.AuditEntityListener.class)
 public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
