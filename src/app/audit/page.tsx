@@ -11,6 +11,7 @@ export default function AuditPage() {
   const [totalElements, setTotalElements] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [filter, setFilter] = useState<{type: string, value: string}>({type: 'all', value: ''});
+  const [dateRange, setDateRange] = useState<{startDate: string, endDate: string}>({startDate: '', endDate: ''});
   const [error, setError] = useState<string>('');
 
   const fetchAuditLogs = async () => {
@@ -18,12 +19,16 @@ export default function AuditPage() {
     setError('');
     try {
       let response;
+      const { startDate, endDate } = dateRange;
+      const startDateParam = startDate || undefined;
+      const endDateParam = endDate || undefined;
+      
       if (filter.type === 'entity' && filter.value) {
-        response = await auditApi.getLogsByEntity(filter.value, currentPage);
+        response = await auditApi.getLogsByEntity(filter.value, currentPage, 10, startDateParam, endDateParam);
       } else if (filter.type === 'severity' && filter.value) {
-        response = await auditApi.getLogsBySeverity(filter.value, currentPage);
+        response = await auditApi.getLogsBySeverity(filter.value, currentPage, 10, startDateParam, endDateParam);
       } else {
-        response = await auditApi.getAllLogs(currentPage);
+        response = await auditApi.getAllLogs(currentPage, 10, startDateParam, endDateParam);
       }
       
       if (response.data) {
@@ -43,7 +48,7 @@ export default function AuditPage() {
 
   useEffect(() => {
     fetchAuditLogs();
-  }, [currentPage, filter, fetchAuditLogs]);
+  }, [currentPage, filter, dateRange, fetchAuditLogs]);
 
   const handleFilterChange = (type: string, value: string) => {
     setFilter({type, value});
@@ -120,9 +125,26 @@ export default function AuditPage() {
             </select>
           )}
           
+          <input
+            type="date"
+            placeholder="Start Date"
+            className="bg-slate-800 text-white px-4 py-2 rounded border border-slate-600 focus:border-blue-500 focus:outline-none"
+            value={dateRange.startDate}
+            onChange={(e) => setDateRange({...dateRange, startDate: e.target.value})}
+          />
+          
+          <input
+            type="date"
+            placeholder="End Date"
+            className="bg-slate-800 text-white px-4 py-2 rounded border border-slate-600 focus:border-blue-500 focus:outline-none"
+            value={dateRange.endDate}
+            onChange={(e) => setDateRange({...dateRange, endDate: e.target.value})}
+          />
+          
           <button
             onClick={() => {
               setFilter({type: 'all', value: ''});
+              setDateRange({startDate: '', endDate: ''});
               setCurrentPage(0);
             }}
             className="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded transition-colors"
