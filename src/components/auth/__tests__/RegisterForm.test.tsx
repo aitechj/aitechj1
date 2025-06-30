@@ -40,13 +40,13 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(/first name/i), 'Test')
     await user.type(screen.getByLabelText(/last name/i), 'User')
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/^password/i), 'password123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'password123')
+    await user.type(screen.getByLabelText(/^password/i), 'TestPass123!')
+    await user.type(screen.getByLabelText(/confirm password/i), 'TestPass123!')
     await user.click(screen.getByRole('checkbox'))
     
     await user.click(screen.getByRole('button', { name: /create account/i }))
 
-    expect(mockOnRegister).toHaveBeenCalledWith('test@example.com', 'password123', 'Test', 'User')
+    expect(mockOnRegister).toHaveBeenCalledWith('test@example.com', 'TestPass123!', 'Test', 'User')
   })
 
   it('should validate password match', async () => {
@@ -62,7 +62,7 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(/first name/i), 'Test')
     await user.type(screen.getByLabelText(/last name/i), 'User')
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/^password/i), 'password123')
+    await user.type(screen.getByLabelText(/^password/i), 'TestPass123!')
     await user.type(screen.getByLabelText(/confirm password/i), 'different')
     await user.click(screen.getByRole('checkbox'))
     
@@ -88,8 +88,8 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(/first name/i), 'Test')
     await user.type(screen.getByLabelText(/last name/i), 'User')
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/^password/i), 'password123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'password123')
+    await user.type(screen.getByLabelText(/^password/i), 'TestPass123!')
+    await user.type(screen.getByLabelText(/confirm password/i), 'TestPass123!')
     await user.click(screen.getByRole('checkbox'))
     await user.click(screen.getByRole('button', { name: /create account/i }))
 
@@ -112,8 +112,8 @@ describe('RegisterForm', () => {
     await user.type(screen.getByLabelText(/first name/i), 'Test')
     await user.type(screen.getByLabelText(/last name/i), 'User')
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/^password/i), 'password123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'password123')
+    await user.type(screen.getByLabelText(/^password/i), 'TestPass123!')
+    await user.type(screen.getByLabelText(/confirm password/i), 'TestPass123!')
     await user.click(screen.getByRole('checkbox'))
     
     const submitButton = screen.getByRole('button', { name: /create account/i })

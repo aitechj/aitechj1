@@ -17,7 +17,7 @@ describe('API Client Cookie Handling', () => {
 
     const result = await authApi.login({
       email: 'test@example.com',
-      password: 'password123',
+      password: 'TestPass123!',
     })
 
     expect(result.data?.token).toBe('jwt-token')
@@ -34,7 +34,7 @@ describe('API Client Cookie Handling', () => {
 
     const result = await authApi.register({
       email: 'test@example.com',
-      password: 'password123',
+      password: 'TestPass123!',
       firstName: 'Test',
       lastName: 'User',
     })
