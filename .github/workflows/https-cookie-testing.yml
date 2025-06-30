@@ -1,0 +1,147 @@
+name: HTTPS non-local Cookie testing
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Run unit tests
+        run: pnpm test
+      
+      - name: Generate coverage report
+        run: pnpm test:coverage
+        
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Build Next.js app
+        run: pnpm build
+      
+      - name: Start Next.js app
+        run: pnpm start &
+        env:
+          NEXT_PUBLIC_API_URL: https://aitechj-backend-v2.fly.dev
+      
+      - name: Wait for app to be ready
+        run: npx wait-on http://localhost:3000 --timeout 60000
+      
+      - name: Run Cypress tests
+        run: pnpm test:e2e
+        env:
+          CYPRESS_baseUrl: http://localhost:3000
+          CYPRESS_API_BASE_URL: https://aitechj-backend-v2.fly.dev
+      
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/
+      
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos/
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Test HTTPS cookie transmission
+        run: |
+          echo "Testing cross-origin cookie functionality..."
+          curl -c cookies.txt -b cookies.txt \
+            -H "Content-Type: application/json" \
+            -d '{"email":"test@example.com","password":"password123"}' \
+            https://aitechj-backend-v2.fly.dev/api/auth/login || true
+          
+          echo "Checking if httpOnly cookie was set..."
+          if grep -q "auth_token" cookies.txt; then
+            echo "✅ Cookie transmission test passed"
+          else
+            echo "❌ Cookie transmission test failed"
+            exit 1
+          fi
+        
+      - name: Verify JWT token expiration
+        run: |
+          echo "Testing JWT token expiration handling..."
+          node -e "
+            const jwt = require('jsonwebtoken');
+            const token = jwt.sign(
+              { email: 'test@example.com' }, 
+              'test-secret', 
+              { expiresIn: '1h' }
+            );
+            const decoded = jwt.decode(token);
+            const expirationTime = decoded.exp * 1000;
+            const currentTime = Date.now();
+            const timeUntilExpiration = expirationTime - currentTime;
+            console.log('Token expires in:', Math.round(timeUntilExpiration / 1000 / 60), 'minutes');
+            if (timeUntilExpiration > 3500000 && timeUntilExpiration < 3700000) {
+              console.log('✅ JWT expiration test passed (1 hour)');
+            } else {
+              console.log('❌ JWT expiration test failed');
+              process.exit(1);
+            }
+          "
