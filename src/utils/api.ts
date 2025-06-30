@@ -92,6 +92,26 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface AuditLog {
+  id: number;
+  entityName: string;
+  entityId: string;
+  operation: string;
+  oldValues?: string;
+  newValues?: string;
+  timestamp: string;
+  userId?: number;
+  severity: string;
+}
+
+export interface AuditLogPage {
+  content: AuditLog[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 export const authApi = {
   login: (credentials: LoginRequest) => 
     apiClient.post<AuthResponse>('/api/auth/login', credentials),
@@ -104,4 +124,21 @@ export const authApi = {
   
   logout: () => 
     apiClient.post<void>('/api/auth/logout', {}),
+};
+
+export const auditApi = {
+  getAllLogs: (page = 0, size = 20) => 
+    apiClient.get<AuditLogPage>(`/api/audit/logs?page=${page}&size=${size}`),
+  
+  getLogsByEntity: (entityName: string, page = 0, size = 20) => 
+    apiClient.get<AuditLogPage>(`/api/audit/logs/entity/${entityName}?page=${page}&size=${size}`),
+  
+  getLogsBySeverity: (severity: string, page = 0, size = 20) => 
+    apiClient.get<AuditLogPage>(`/api/audit/logs/severity/${severity}?page=${page}&size=${size}`),
+  
+  getLogsByUser: (userId: number, page = 0, size = 20) => 
+    apiClient.get<AuditLogPage>(`/api/audit/logs/user/${userId}?page=${page}&size=${size}`),
+  
+  createManualLog: (entityName: string, entityId: string, operation: string, oldValues?: string, newValues?: string, userId?: number, severity = 'INFO') => 
+    apiClient.post<void>(`/api/audit/logs/manual?entityName=${entityName}&entityId=${entityId}&operation=${operation}&oldValues=${oldValues || ''}&newValues=${newValues || ''}&userId=${userId || ''}&severity=${severity}`, {}),
 };

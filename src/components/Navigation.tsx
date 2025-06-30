@@ -16,6 +16,7 @@ export default function Navigation({ currentPage }: NavigationProps) {
     { href: "/chat", label: "AI Chat" },
     { href: "/profile", label: "Profile" },
     { href: "/admin", label: "Admin" },
+    { href: "/audit", label: "Audit Logs" },
   ];
 
   const unauthenticatedNavItems = [
