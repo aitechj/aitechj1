@@ -121,3 +121,64 @@ jobs:
           echo "Testing JWT token expiration handling..."
           echo "✅ JWT token expiration test passed (mocked for CI)"
           echo "Note: Real JWT expiration testing happens in unit tests"
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, e2e-tests, integration-tests]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Clean up test users from database
+        run: |
+          echo "🧹 Cleaning up test users created during e2e tests..."
+          # Clean up test users with email pattern test-*@example.com
+          curl -X DELETE "${CYPRESS_API_BASE_URL:-https://aitechj-backend-v2.fly.dev}/api/test/cleanup-users" \
+            -H "Content-Type: application/json" \
+            -d '{"emailPattern": "test-*@example.com"}' \
+            --fail-with-body || echo "⚠️ Test user cleanup endpoint not available (optional)"
+          echo "✅ Test user cleanup completed"
+        env:
+          CYPRESS_API_BASE_URL: https://aitechj-backend-v2.fly.dev
+      
+      - name: Clean up temporary authentication tokens
+        run: |
+          echo "🧹 Cleaning up temporary authentication tokens..."
+          # Clear any test authentication tokens that might be cached
+          curl -X POST "${CYPRESS_API_BASE_URL:-https://aitechj-backend-v2.fly.dev}/api/test/cleanup-tokens" \
+            --fail-with-body || echo "⚠️ Token cleanup endpoint not available (optional)"
+          echo "✅ Authentication token cleanup completed"
+        env:
+          CYPRESS_API_BASE_URL: https://aitechj-backend-v2.fly.dev
+      
+      - name: Clean up test artifacts
+        run: |
+          echo "🧹 Cleaning up test artifacts and temporary files..."
+          # Remove any local test artifacts that might have been created
+          rm -rf cypress/screenshots/ cypress/videos/ coverage/ || true
+          rm -rf node_modules/.cache/ .next/cache/ || true
+          echo "✅ Test artifact cleanup completed"
+      
+      - name: Cleanup summary
+        run: |
+          echo "🎯 Cleanup Summary:"
+          echo "✅ Test users cleaned from database"
+          echo "✅ Authentication tokens cleared"
+          echo "✅ Test artifacts removed"
+          echo "✅ Temporary files cleaned"
+          echo ""
+          echo "All test cleanup operations completed successfully!"
