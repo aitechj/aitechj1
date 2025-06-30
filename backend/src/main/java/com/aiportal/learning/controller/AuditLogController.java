@@ -19,8 +19,10 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAllAuditLogs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(auditLogService.getAllAuditLogs(page, size));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+        return ResponseEntity.ok(auditLogService.getAllAuditLogs(page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/entity/{entityName}")
@@ -28,8 +30,10 @@ public class AuditLogController {
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(entityName, page, size));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(entityName, page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/severity/{severity}")
@@ -37,8 +41,10 @@ public class AuditLogController {
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(severity, page, size));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(severity, page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/user/{userId}")
