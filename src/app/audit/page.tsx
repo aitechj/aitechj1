@@ -13,10 +13,6 @@ export default function AuditPage() {
   const [filter, setFilter] = useState<{type: string, value: string}>({type: 'all', value: ''});
   const [error, setError] = useState<string>('');
 
-  useEffect(() => {
-    fetchAuditLogs();
-  }, [currentPage, filter]);
-
   const fetchAuditLogs = async () => {
     setLoading(true);
     setError('');
@@ -44,6 +40,10 @@ export default function AuditPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAuditLogs();
+  }, [currentPage, filter, fetchAuditLogs]);
 
   const handleFilterChange = (type: string, value: string) => {
     setFilter({type, value});
