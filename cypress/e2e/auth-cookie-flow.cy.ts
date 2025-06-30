@@ -64,7 +64,7 @@ describe('Authentication Cookie Flow', () => {
     cy.setCookie('auth_token', 'mock-jwt-token', {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'no_restriction',
     })
 
     cy.intercept('GET', '**/api/auth/me', {
@@ -93,7 +93,7 @@ describe('Authentication Cookie Flow', () => {
     cy.setCookie('auth_token', 'mock-jwt-token', {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'no_restriction',
     })
 
     cy.intercept('POST', '**/api/auth/logout', {
@@ -115,7 +115,7 @@ describe('Authentication Cookie Flow', () => {
     cy.setCookie('auth_token', expiredToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'no_restriction',
     })
 
     cy.intercept('GET', '**/api/auth/me', {
@@ -134,7 +134,7 @@ describe('Authentication Cookie Flow', () => {
     cy.setCookie('auth_token', 'cross-origin-token', {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'no_restriction',
     })
 
     cy.intercept('GET', 'https://aitechj-backend-v2.fly.dev/api/auth/me', {

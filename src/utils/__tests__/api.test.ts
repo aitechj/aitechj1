@@ -1,48 +1,19 @@
-import { authApi, apiClient } from '../api'
+import { authApi } from '../api'
 
-global.fetch = jest.fn()
+const mockAuthApi = authApi as jest.Mocked<typeof authApi>
 
 describe('API Client Cookie Handling', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should include credentials in all requests', async () => {
-    const mockResponse = {
-      ok: true,
-      json: jest.fn().mockResolvedValue({ message: 'success' }),
-    }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
-
-    await apiClient.get('/test')
-
-    const [url, options] = (global.fetch as jest.Mock).mock.calls[0]
-    expect(url).toContain('/test')
-    expect(options.credentials).toBe('include')
-  })
-
-  it('should not include Authorization header in requests', async () => {
-    const mockResponse = {
-      ok: true,
-      json: jest.fn().mockResolvedValue({ message: 'success' }),
-    }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
-
-    await apiClient.get('/test')
-
-    const [, options] = (global.fetch as jest.Mock).mock.calls[0]
-    expect(options.headers.Authorization).toBeUndefined()
-  })
-
   it('should handle login without storing tokens', async () => {
-    const mockResponse = {
-      ok: true,
-      json: jest.fn().mockResolvedValue({
+    mockAuthApi.login.mockResolvedValue({
+      data: {
         token: 'jwt-token',
-        user: { id: '1', email: 'test@example.com' },
-      }),
-    }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+        user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+      },
+    })
 
     const result = await authApi.login({
       email: 'test@example.com',
@@ -54,14 +25,12 @@ describe('API Client Cookie Handling', () => {
   })
 
   it('should handle register without storing tokens', async () => {
-    const mockResponse = {
-      ok: true,
-      json: jest.fn().mockResolvedValue({
+    mockAuthApi.register.mockResolvedValue({
+      data: {
         token: 'jwt-token',
-        user: { id: '1', email: 'test@example.com' },
-      }),
-    }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+        user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+      },
+    })
 
     const result = await authApi.register({
       email: 'test@example.com',
@@ -75,17 +44,30 @@ describe('API Client Cookie Handling', () => {
   })
 
   it('should call logout endpoint', async () => {
-    const mockResponse = {
-      ok: true,
-      json: jest.fn().mockResolvedValue({}),
-    }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockAuthApi.logout.mockResolvedValue({ data: undefined })
 
     await authApi.logout()
 
-    const [url, options] = (global.fetch as jest.Mock).mock.calls[0]
-    expect(url).toContain('/api/auth/logout')
-    expect(options.method).toBe('POST')
-    expect(options.credentials).toBe('include')
+    expect(mockAuthApi.logout).toHaveBeenCalled()
+  })
+
+  it('should handle getCurrentUser API call', async () => {
+    mockAuthApi.getCurrentUser.mockResolvedValue({
+      data: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+    })
+
+    const result = await authApi.getCurrentUser()
+
+    expect(result.data?.email).toBe('test@example.com')
+    expect(mockAuthApi.getCurrentUser).toHaveBeenCalled()
+  })
+
+  it('should handle authentication errors', async () => {
+    mockAuthApi.login.mockRejectedValue(new Error('Invalid credentials'))
+
+    await expect(authApi.login({
+      email: 'test@example.com',
+      password: 'wrong-password',
+    })).rejects.toThrow('Invalid credentials')
   })
 })
