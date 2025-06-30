@@ -13,7 +13,7 @@ describe('Authentication Cookie Flow', () => {
       firstName: 'Test',
       lastName: 'User',
       email: `test-${Date.now()}@example.com`,
-      password: 'password123',
+      password: 'TestPass123!',
     }
   })
 

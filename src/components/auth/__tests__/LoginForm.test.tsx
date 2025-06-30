@@ -35,11 +35,11 @@ describe('LoginForm', () => {
     )
 
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'password123')
+    await user.type(screen.getByLabelText(/password/i), 'TestPass123!')
     
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
-    expect(mockOnLogin).toHaveBeenCalledWith('test@example.com', 'password123')
+    expect(mockOnLogin).toHaveBeenCalledWith('test@example.com', 'TestPass123!')
   })
 
   it('should display error message', async () => {
@@ -54,7 +54,7 @@ describe('LoginForm', () => {
     )
 
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'password123')
+    await user.type(screen.getByLabelText(/password/i), 'TestPass123!')
     await user.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {
@@ -74,7 +74,7 @@ describe('LoginForm', () => {
     )
 
     await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'password123')
+    await user.type(screen.getByLabelText(/password/i), 'TestPass123!')
     
     const submitButton = screen.getByRole('button', { name: /sign in/i })
     await user.click(submitButton)
