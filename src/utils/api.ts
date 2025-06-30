@@ -92,25 +92,6 @@ export interface AuthResponse {
   user: User;
 }
 
-export interface AuditLog {
-  id: number;
-  entityName: string;
-  entityId: string;
-  operation: string;
-  oldValues?: string;
-  newValues?: string;
-  timestamp: string;
-  userId?: number;
-  severity: string;
-}
-
-export interface AuditLogPage {
-  content: AuditLog[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}
 
 export const authApi = {
   login: (credentials: LoginRequest) => 
@@ -124,37 +105,4 @@ export const authApi = {
   
   logout: () => 
     apiClient.post<void>('/api/auth/logout', {}),
-};
-
-export const auditApi = {
-  getAllLogs: (page = 0, size = 10, startDate?: string, endDate?: string) => {
-    let url = `/api/audit/logs?page=${page}&size=${size}`;
-    if (startDate) url += `&startDate=${startDate}`;
-    if (endDate) url += `&endDate=${endDate}`;
-    return apiClient.get<AuditLogPage>(url);
-  },
-  
-  getLogsByEntity: (entityName: string, page = 0, size = 10, startDate?: string, endDate?: string) => {
-    let url = `/api/audit/logs/entity/${entityName}?page=${page}&size=${size}`;
-    if (startDate) url += `&startDate=${startDate}`;
-    if (endDate) url += `&endDate=${endDate}`;
-    return apiClient.get<AuditLogPage>(url);
-  },
-  
-  getLogsBySeverity: (severity: string, page = 0, size = 10, startDate?: string, endDate?: string) => {
-    let url = `/api/audit/logs/severity/${severity}?page=${page}&size=${size}`;
-    if (startDate) url += `&startDate=${startDate}`;
-    if (endDate) url += `&endDate=${endDate}`;
-    return apiClient.get<AuditLogPage>(url);
-  },
-  
-  getLogsByUser: (userId: number, page = 0, size = 10, startDate?: string, endDate?: string) => {
-    let url = `/api/audit/logs/user/${userId}?page=${page}&size=${size}`;
-    if (startDate) url += `&startDate=${startDate}`;
-    if (endDate) url += `&endDate=${endDate}`;
-    return apiClient.get<AuditLogPage>(url);
-  },
-  
-  createManualLog: (entityName: string, entityId: string, operation: string, oldValues?: string, newValues?: string, userId?: number, severity = 'INFO') => 
-    apiClient.post<void>(`/api/audit/logs/manual?entityName=${entityName}&entityId=${entityId}&operation=${operation}&oldValues=${oldValues || ''}&newValues=${newValues || ''}&userId=${userId || ''}&severity=${severity}`, {}),
 };

@@ -99,9 +99,6 @@ public class AuditLogService {
         createManualAuditLog(entityName, entityId, "CRITICAL_EVENT", null, description, userId, "CRITICAL");
     }
     
-    public void logDebugEvent(String entityName, String entityId, String description, Long userId) {
-        createManualAuditLog(entityName, entityId, "DEBUG_EVENT", null, description, userId, "DEBUG");
-    }
     
     public void logErrorEvent(String entityName, String entityId, String description, Long userId) {
         createManualAuditLog(entityName, entityId, "ERROR_EVENT", null, description, userId, "ERROR");
