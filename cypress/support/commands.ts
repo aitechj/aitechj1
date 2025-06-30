@@ -15,30 +15,46 @@ declare global {
 }
 
 Cypress.Commands.add('login', (email: string, password: string) => {
-  cy.visit('/auth')
-  cy.get('input[type="email"]').type(email)
-  cy.get('input[type="password"]').type(password)
-  cy.get('button[type="submit"]').contains('Sign In').click()
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('API_BASE_URL')}/api/auth/login`,
+    body: { email, password }
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+    expect(resp.headers['set-cookie']).to.exist
+    const setCookieHeader = resp.headers['set-cookie']
+    const cookieString = Array.isArray(setCookieHeader) ? setCookieHeader.join(';') : setCookieHeader
+    expect(cookieString).to.include('HttpOnly')
+  })
 })
 
 Cypress.Commands.add('register', (userData) => {
-  cy.visit('/auth')
-  cy.contains('Sign up').click()
-  cy.get('input[placeholder="John"]').type(userData.firstName)
-  cy.get('input[placeholder="Doe"]').type(userData.lastName)
-  cy.get('input[type="email"]').type(userData.email)
-  cy.get('input[type="password"]').first().type(userData.password)
-  cy.get('input[type="password"]').last().type(userData.password)
-  cy.get('input[type="checkbox"]').check()
-  cy.get('button[type="submit"]').contains('Create Account').click()
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('API_BASE_URL')}/api/auth/register`,
+    body: {
+      email: userData.email,
+      password: userData.password,
+      firstName: userData.firstName,
+      lastName: userData.lastName
+    }
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+    expect(resp.headers['set-cookie']).to.exist
+    const setCookieHeader = resp.headers['set-cookie']
+    const cookieString = Array.isArray(setCookieHeader) ? setCookieHeader.join(';') : setCookieHeader
+    expect(cookieString).to.include('HttpOnly')
+  })
 })
 
 Cypress.Commands.add('checkAuthCookie', () => {
-  cy.getCookie('auth_token').should('exist')
+  cy.request(`${Cypress.env('API_BASE_URL')}/api/auth/me`).its('status').should('eq', 200)
 })
 
 Cypress.Commands.add('clearAuthCookie', () => {
-  cy.clearCookie('auth_token')
+  cy.request('POST', `${Cypress.env('API_BASE_URL')}/api/auth/logout`).then((resp) => {
+    expect(resp.status).to.eq(200)
+  })
 })
 
 export {}
