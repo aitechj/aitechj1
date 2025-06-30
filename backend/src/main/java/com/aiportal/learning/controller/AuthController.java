@@ -5,6 +5,7 @@ import com.aiportal.learning.dto.LoginRequest;
 import com.aiportal.learning.dto.RegisterRequest;
 import com.aiportal.learning.model.User;
 import com.aiportal.learning.service.AuthService;
+import com.aiportal.learning.service.InputSanitizationService;
 import com.aiportal.learning.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private InputSanitizationService inputSanitizationService;
+    
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse httpResponse) {
         try {
@@ -41,6 +45,9 @@ public class AuthController {
             if (userService.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Email already exists");
             }
+            
+            request.setFirstName(inputSanitizationService.sanitizeInput(request.getFirstName()));
+            request.setLastName(inputSanitizationService.sanitizeInput(request.getLastName()));
             
             AuthResponse response = authService.register(request);
             setAuthCookie(httpResponse, response.getToken());
