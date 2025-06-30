@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AuditLogService {
@@ -15,18 +17,57 @@ public class AuditLogService {
     @Autowired
     private AuditLogRepository auditLogRepository;
     
-    public Page<AuditLog> getAllAuditLogs(int page, int size) {
+    public Page<AuditLog> getAllAuditLogs(int page, int size, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        
+        if (startDate != null && endDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findByTimestampBetweenOrderByTimestampDesc(start, end, pageable);
+        } else if (startDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            return auditLogRepository.findByTimestampGreaterThanEqualOrderByTimestampDesc(start, pageable);
+        } else if (endDate != null) {
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findByTimestampLessThanEqualOrderByTimestampDesc(end, pageable);
+        }
+        
         return auditLogRepository.findAll(pageable);
     }
     
-    public Page<AuditLog> getAuditLogsByEntity(String entityName, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AuditLog> getAuditLogsByEntity(String entityName, int page, int size, String startDate, String endDate) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        
+        if (startDate != null && endDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findByEntityNameAndTimestampBetweenOrderByTimestampDesc(entityName, start, end, pageable);
+        } else if (startDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            return auditLogRepository.findByEntityNameAndTimestampGreaterThanEqualOrderByTimestampDesc(entityName, start, pageable);
+        } else if (endDate != null) {
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findByEntityNameAndTimestampLessThanEqualOrderByTimestampDesc(entityName, end, pageable);
+        }
+        
         return auditLogRepository.findByEntityNameOrderByTimestampDesc(entityName, pageable);
     }
     
-    public Page<AuditLog> getAuditLogsBySeverity(String severity, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AuditLog> getAuditLogsBySeverity(String severity, int page, int size, String startDate, String endDate) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
+        
+        if (startDate != null && endDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findBySeverityAndTimestampBetweenOrderByTimestampDesc(severity, start, end, pageable);
+        } else if (startDate != null) {
+            LocalDateTime start = LocalDateTime.parse(startDate + "T00:00:00");
+            return auditLogRepository.findBySeverityAndTimestampGreaterThanEqualOrderByTimestampDesc(severity, start, pageable);
+        } else if (endDate != null) {
+            LocalDateTime end = LocalDateTime.parse(endDate + "T23:59:59");
+            return auditLogRepository.findBySeverityAndTimestampLessThanEqualOrderByTimestampDesc(severity, end, pageable);
+        }
+        
         return auditLogRepository.findBySeverityOrderByTimestampDesc(severity, pageable);
     }
     
