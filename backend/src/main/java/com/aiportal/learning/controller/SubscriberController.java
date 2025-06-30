@@ -3,6 +3,7 @@ package com.aiportal.learning.controller;
 import com.aiportal.learning.dto.SubscriberRequest;
 import com.aiportal.learning.dto.SubscriberResponse;
 import com.aiportal.learning.model.Subscriber;
+import com.aiportal.learning.service.InputSanitizationService;
 import com.aiportal.learning.service.SubscriberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class SubscriberController {
     
     @Autowired
     private SubscriberService subscriberService;
+    
+    @Autowired
+    private InputSanitizationService inputSanitizationService;
     
     @GetMapping
     public ResponseEntity<List<SubscriberResponse>> getAllSubscribers() {
@@ -44,8 +48,8 @@ public class SubscriberController {
             
             Subscriber subscriber = new Subscriber();
             subscriber.setEmail(request.getEmail());
-            subscriber.setFirstName(request.getFirstName());
-            subscriber.setLastName(request.getLastName());
+            subscriber.setFirstName(inputSanitizationService.sanitizeInput(request.getFirstName()));
+            subscriber.setLastName(inputSanitizationService.sanitizeInput(request.getLastName()));
             subscriber.setSubscriptionType(request.getSubscriptionType());
             
             Subscriber savedSubscriber = subscriberService.save(subscriber);
@@ -60,8 +64,8 @@ public class SubscriberController {
         try {
             Subscriber subscriberDetails = new Subscriber();
             subscriberDetails.setEmail(request.getEmail());
-            subscriberDetails.setFirstName(request.getFirstName());
-            subscriberDetails.setLastName(request.getLastName());
+            subscriberDetails.setFirstName(inputSanitizationService.sanitizeInput(request.getFirstName()));
+            subscriberDetails.setLastName(inputSanitizationService.sanitizeInput(request.getLastName()));
             subscriberDetails.setSubscriptionType(request.getSubscriptionType());
             
             Subscriber updatedSubscriber = subscriberService.update(id, subscriberDetails);
