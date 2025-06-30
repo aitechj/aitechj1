@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom'
 
-expect.extend(require('@testing-library/jest-dom'))
-
 jest.mock('next/navigation', () => ({
   useRouter() {
     return {
@@ -18,6 +16,21 @@ jest.mock('next/navigation', () => ({
   },
   usePathname() {
     return '/'
+  },
+}))
+
+jest.mock('@/utils/api', () => ({
+  authApi: {
+    getCurrentUser: jest.fn(),
+    login: jest.fn(),
+    register: jest.fn(),
+    logout: jest.fn(),
+  },
+  apiClient: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
   },
 }))
 

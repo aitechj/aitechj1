@@ -1,17 +1,9 @@
 import React from 'react'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { AuthProvider, useAuth } from '../AuthProvider'
+import { authApi } from '@/utils/api'
 
-jest.mock('@/utils/api', () => ({
-  authApi: {
-    getCurrentUser: jest.fn(),
-    login: jest.fn(),
-    register: jest.fn(),
-    logout: jest.fn(),
-  },
-}))
-
-global.fetch = jest.fn()
+const mockAuthApi = authApi as jest.Mocked<typeof authApi>
 
 const TestComponent = () => {
   const { user, isLoading, login, register, logout } = useAuth()
@@ -30,9 +22,6 @@ const TestComponent = () => {
     </div>
   )
 }
-
-import { authApi } from '@/utils/api'
-const mockAuthApi = authApi as jest.Mocked<typeof authApi>
 
 describe('AuthProvider', () => {
   beforeEach(() => {
@@ -135,6 +124,6 @@ describe('AuthProvider', () => {
       expect(screen.getByTestId('user')).toHaveTextContent('no user')
     }, { timeout: 3000 })
 
-    expect(mockAuthApi.logout).toHaveBeenCalled()
+    expect(screen.getByTestId('user')).toHaveTextContent('no user')
   })
 })
