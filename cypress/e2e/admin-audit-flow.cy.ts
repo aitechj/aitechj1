@@ -134,17 +134,30 @@ describe('Admin Audit Flow', () => {
     
     cy.request({
       method: 'GET',
-      url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=-1&size=10`,
+      url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=10`,
       failOnStatusCode: false
     }).then((resp) => {
+      cy.log(`Valid request status: ${resp.status}`)
+      expect(resp.status).to.eq(200)
+      
+      return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=-1&size=10`,
+        failOnStatusCode: false
+      })
+    }).then((resp) => {
+      cy.log(`Invalid page request status: ${resp.status}`)
+      cy.log(`Response body: ${JSON.stringify(resp.body)}`)
       expect(resp.status).to.eq(400)
-    })
-    
-    cy.request({
-      method: 'GET',
-      url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=101`,
-      failOnStatusCode: false
+      
+      return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=101`,
+        failOnStatusCode: false
+      })
     }).then((resp) => {
+      cy.log(`Invalid size request status: ${resp.status}`)
+      cy.log(`Response body: ${JSON.stringify(resp.body)}`)
       expect(resp.status).to.eq(400)
     })
   })
