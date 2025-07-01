@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +25,12 @@ public class AuditLogController {
     
     @GetMapping("/logs")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(@Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
+    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(
+            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
         return ResponseEntity.ok(auditLogService.getAllAuditLogs(
             filterRequest.getPage(), 
             filterRequest.getSize(), 
@@ -36,7 +43,11 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
-            @Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
+            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
         return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(
             entityName, 
             filterRequest.getPage(), 
@@ -50,7 +61,11 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
-            @Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
+            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
         return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(
             severity, 
             filterRequest.getPage(), 
@@ -64,7 +79,11 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByUser(
             @PathVariable Long userId,
-            @Valid @ModelAttribute PaginationRequest paginationRequest) {
+            @Valid @ModelAttribute PaginationRequest paginationRequest,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, bindingResult);
+        }
         return ResponseEntity.ok(auditLogService.getAuditLogsByUser(
             userId, 
             paginationRequest.getPage(), 
