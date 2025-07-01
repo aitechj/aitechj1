@@ -82,7 +82,7 @@ public class AuditLogService {
     }
     
     public void createManualAuditLog(String entityName, String entityId, String operation, 
-                                   String oldValues, String newValues, Long userId, String severity) {
+                                    String oldValues, String newValues, Long userId, String severity) {
         AuditLog auditLog = new AuditLog();
         auditLog.setEntityName(entityName);
         auditLog.setEntityId(entityId);
@@ -93,6 +93,48 @@ public class AuditLogService {
         auditLog.setSeverity(severity);
         
         auditLogRepository.save(auditLog);
+    }
+    
+    public void logFailedLogin(String email, String ipAddress, String userAgent) {
+        createManualAuditLog("Authentication", email, "FAILED_LOGIN", 
+            null, String.format("IP: %s, User-Agent: %s", ipAddress, userAgent), null, "WARN");
+    }
+    
+    public void logSuccessfulLogin(String email, String ipAddress, Long userId) {
+        createManualAuditLog("Authentication", email, "SUCCESSFUL_LOGIN", 
+            null, String.format("IP: %s", ipAddress), userId, "INFO");
+    }
+    
+    public void logApiAccess(String endpoint, String method, String ipAddress, Long userId, long responseTime, int statusCode) {
+        String details = String.format("Method: %s, IP: %s, ResponseTime: %dms, Status: %d", 
+            method, ipAddress, responseTime, statusCode);
+        String severity = statusCode >= 400 ? "WARN" : "INFO";
+        createManualAuditLog("API_ACCESS", endpoint, "ACCESS", null, details, userId, severity);
+    }
+    
+    public void logAdminDashboardAccess(String email, String ipAddress, Long userId) {
+        createManualAuditLog("AdminDashboard", "logs-dashboard", "ACCESS", 
+            null, String.format("IP: %s", ipAddress), userId, "INFO");
+    }
+    
+    public void logSlowQuery(String query, long executionTime) {
+        String severity = executionTime > 5000 ? "CRITICAL" : executionTime > 1000 ? "WARN" : "INFO";
+        createManualAuditLog("Database", "query", "SLOW_QUERY", 
+            null, String.format("Query: %s, ExecutionTime: %dms", query, executionTime), null, severity);
+    }
+    
+    public void logConfigurationChange(String configKey, String oldValue, String newValue, Long userId) {
+        createManualAuditLog("Configuration", configKey, "CONFIG_CHANGE", oldValue, newValue, userId, "WARN");
+    }
+    
+    public void logRateLimitViolation(String ipAddress, String endpoint, int requestCount) {
+        createManualAuditLog("Security", "rate-limit", "VIOLATION", 
+            null, String.format("IP: %s, Endpoint: %s, Requests: %d", ipAddress, endpoint, requestCount), null, "CRITICAL");
+    }
+    
+    public void logSystemError(String component, String errorMessage, String stackTrace) {
+        createManualAuditLog("System", component, "ERROR", 
+            null, String.format("Error: %s, Stack: %s", errorMessage, stackTrace), null, "ERROR");
     }
     
     public void logCriticalEvent(String entityName, String entityId, String description, Long userId) {
