@@ -21,7 +21,7 @@ public class AuditLogController {
     
     @GetMapping("/logs")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(@Valid AuditLogFilterRequest filterRequest) {
+    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(@Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
         return ResponseEntity.ok(auditLogService.getAllAuditLogs(
             filterRequest.getPage(), 
             filterRequest.getSize(), 
@@ -34,7 +34,7 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
-            @Valid AuditLogFilterRequest filterRequest) {
+            @Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
         return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(
             entityName, 
             filterRequest.getPage(), 
@@ -48,7 +48,7 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
-            @Valid AuditLogFilterRequest filterRequest) {
+            @Valid @ModelAttribute AuditLogFilterRequest filterRequest) {
         return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(
             severity, 
             filterRequest.getPage(), 
@@ -62,7 +62,7 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByUser(
             @PathVariable Long userId,
-            @Valid PaginationRequest paginationRequest) {
+            @Valid @ModelAttribute PaginationRequest paginationRequest) {
         return ResponseEntity.ok(auditLogService.getAuditLogsByUser(
             userId, 
             paginationRequest.getPage(), 
