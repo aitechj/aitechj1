@@ -41,4 +41,15 @@ public class UserService implements UserDetailsService {
     public User save(User user) {
         return userRepository.save(user);
     }
+    
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        
+        if (!user.isDeletable()) {
+            throw new IllegalStateException("Cannot delete protected user: " + user.getEmail());
+        }
+        
+        userRepository.delete(user);
+    }
 }

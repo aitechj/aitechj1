@@ -32,6 +32,9 @@ public class User {
     private Subscription subscription = Subscription.FREE;
     
     @Column(nullable = false)
+    private boolean deletable = true;
+    
+    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     
     @Column(nullable = false)
@@ -67,11 +70,21 @@ public class User {
     public Subscription getSubscription() { return subscription; }
     public void setSubscription(Subscription subscription) { this.subscription = subscription; }
     
+    public boolean isDeletable() { return deletable; }
+    public void setDeletable(boolean deletable) { this.deletable = deletable; }
+    
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    
+    @PreRemove
+    public void preRemove() {
+        if (!deletable) {
+            throw new IllegalStateException("Cannot delete protected admin user: " + email);
+        }
+    }
     
     @PreUpdate
     public void preUpdate() {
