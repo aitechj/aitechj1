@@ -1,6 +1,39 @@
+'use client';
+
 import { Navigation } from '@/components';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AdminPage() {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        router.push('/auth');
+        return;
+      }
+      
+      if (user?.role !== 'admin' || user?.email !== 'isha.bahati@hotmail.com') {
+        router.push('/dashboard');
+        return;
+      }
+    }
+  }, [isLoading, isAuthenticated, user, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user || user.role !== 'admin' || user.email !== 'isha.bahati@hotmail.com') {
+    return null;
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       <Navigation currentPage="admin" />
