@@ -10,14 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/audit")
-@Validated
 public class AuditLogController {
     
     @Autowired
@@ -26,11 +22,15 @@ public class AuditLogController {
     @GetMapping("/logs")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAllAuditLogs(
-            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new MethodArgumentNotValidException(null, bindingResult);
+            @ModelAttribute AuditLogFilterRequest filterRequest) {
+        
+        if (filterRequest.getPage() < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative");
         }
+        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100");
+        }
+        
         return ResponseEntity.ok(auditLogService.getAllAuditLogs(
             filterRequest.getPage(), 
             filterRequest.getSize(), 
@@ -43,11 +43,15 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
-            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new MethodArgumentNotValidException(null, bindingResult);
+            @ModelAttribute AuditLogFilterRequest filterRequest) {
+        
+        if (filterRequest.getPage() < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative");
         }
+        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100");
+        }
+        
         return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(
             entityName, 
             filterRequest.getPage(), 
@@ -61,11 +65,15 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
-            @Valid @ModelAttribute AuditLogFilterRequest filterRequest,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new MethodArgumentNotValidException(null, bindingResult);
+            @ModelAttribute AuditLogFilterRequest filterRequest) {
+        
+        if (filterRequest.getPage() < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative");
         }
+        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100");
+        }
+        
         return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(
             severity, 
             filterRequest.getPage(), 
@@ -79,11 +87,15 @@ public class AuditLogController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByUser(
             @PathVariable Long userId,
-            @Valid @ModelAttribute PaginationRequest paginationRequest,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new MethodArgumentNotValidException(null, bindingResult);
+            @ModelAttribute PaginationRequest paginationRequest) {
+        
+        if (paginationRequest.getPage() < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative");
         }
+        if (paginationRequest.getSize() < 1 || paginationRequest.getSize() > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100");
+        }
+        
         return ResponseEntity.ok(auditLogService.getAuditLogsByUser(
             userId, 
             paginationRequest.getPage(), 
