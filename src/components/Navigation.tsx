@@ -7,16 +7,23 @@ interface NavigationProps {
 }
 
 export default function Navigation({ currentPage }: NavigationProps) {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   
-  const authenticatedNavItems = [
+  const isAdminUser = (user: any) => {
+    return user?.role === 'admin' && user?.email === 'isha.bahati@hotmail.com';
+  };
+  
+  const baseAuthenticatedNavItems = [
     { href: "/", label: "Home" },
     { href: "/courses", label: "Courses" },
     { href: "/dashboard", label: "Dashboard" },
     { href: "/chat", label: "AI Chat" },
     { href: "/profile", label: "Profile" },
-    { href: "/admin", label: "Admin" },
   ];
+
+  const authenticatedNavItems = isAdminUser(user) 
+    ? [...baseAuthenticatedNavItems, { href: "/admin", label: "Admin" }]
+    : baseAuthenticatedNavItems;
 
   const unauthenticatedNavItems = [
     { href: "/", label: "Home" },
