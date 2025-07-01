@@ -31,10 +31,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse httpResponse) {
         try {
+            System.out.println("DEBUG: Login attempt for email: " + request.getEmail());
             AuthResponse response = authService.login(request);
             setAuthCookie(httpResponse, response.getToken());
+            System.out.println("DEBUG: Login successful for email: " + request.getEmail());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println("DEBUG: Login failed for email: " + request.getEmail() + " - Error: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
