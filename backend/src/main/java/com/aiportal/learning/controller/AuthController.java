@@ -81,20 +81,15 @@ public class AuthController {
     }
     
     private void setAuthCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("auth_token", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true); // HTTPS only
-        cookie.setPath("/");
-        cookie.setMaxAge(3600); // 1 hour (matches JWT expiration)
-        response.addCookie(cookie);
+        String cookieValue = String.format(
+            "auth_token=%s; Path=/; Max-Age=3600; HttpOnly; Secure; SameSite=None",
+            token
+        );
+        response.setHeader("Set-Cookie", cookieValue);
     }
     
     private void clearAuthCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("auth_token", "");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // Expire immediately
-        response.addCookie(cookie);
+        String cookieValue = "auth_token=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=None";
+        response.setHeader("Set-Cookie", cookieValue);
     }
 }
