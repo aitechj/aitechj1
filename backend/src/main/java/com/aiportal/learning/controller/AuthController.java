@@ -5,9 +5,12 @@ import com.aiportal.learning.dto.LoginRequest;
 import com.aiportal.learning.dto.RegisterRequest;
 import com.aiportal.learning.model.User;
 import com.aiportal.learning.service.AuthService;
+import com.aiportal.learning.service.AuditLogService;
 import com.aiportal.learning.service.InputSanitizationService;
 import com.aiportal.learning.service.UserService;
+import com.aiportal.learning.util.IpAddressUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +31,28 @@ public class AuthController {
     @Autowired
     private InputSanitizationService inputSanitizationService;
     
+    @Autowired
+    private AuditLogService auditLogService;
+    
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse httpResponse) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, 
+                                           HttpServletResponse httpResponse, HttpServletRequest httpRequest) {
         try {
+            String ipAddress = IpAddressUtil.getClientIpAddress(httpRequest);
             System.out.println("DEBUG: Login attempt for email: " + request.getEmail());
             AuthResponse response = authService.login(request);
             setAuthCookie(httpResponse, response.getToken());
+            
+            auditLogService.logSuccessfulLogin(request.getEmail(), ipAddress, Long.parseLong(response.getUser().getId()));
+            
             System.out.println("DEBUG: Login successful for email: " + request.getEmail());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            String ipAddress = IpAddressUtil.getClientIpAddress(httpRequest);
+            String userAgent = httpRequest.getHeader("User-Agent");
+            
+            auditLogService.logFailedLogin(request.getEmail(), ipAddress, userAgent);
+            
             System.out.println("DEBUG: Login failed for email: " + request.getEmail() + " - Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -62,7 +78,7 @@ public class AuthController {
     }
     
     @GetMapping("/me")
-    public ResponseEntity<AuthResponse.UserDto> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<AuthResponse.UserDto> getCurrentUser(Authentication authentication, HttpServletRequest request) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).build();
         }
@@ -70,6 +86,11 @@ public class AuthController {
         String email = authentication.getName();
         User user = userService.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if ("admin".equals(user.getRole())) {
+            String ipAddress = IpAddressUtil.getClientIpAddress(request);
+            auditLogService.logAdminDashboardAccess(email, ipAddress, user.getId());
+        }
         
         return ResponseEntity.ok(new AuthResponse.UserDto(user));
     }

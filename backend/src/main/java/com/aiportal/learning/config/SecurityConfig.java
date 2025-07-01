@@ -27,6 +27,12 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     
+    @Autowired
+    private ApiAccessLoggingFilter apiAccessLoggingFilter;
+    
+    @Autowired
+    private SecurityLoggingFilter securityLoggingFilter;
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -65,7 +71,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/audit/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(apiAccessLoggingFilter, JwtAuthenticationFilter.class)
+            .addFilterBefore(securityLoggingFilter, ApiAccessLoggingFilter.class);
         
         return http.build();
     }
