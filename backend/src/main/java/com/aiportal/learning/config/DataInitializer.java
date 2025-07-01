@@ -17,10 +17,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Value("${app.admin.email:admin@aitechj.com}")
-    private String adminEmail;
+    private String adminEmail = "isha.bahati@hotmail.com";
     
-    @Value("${app.admin.password:admin123}")
+    @Value("${app_admin_password:admin123}")
     private String adminPassword;
     
     @Override
