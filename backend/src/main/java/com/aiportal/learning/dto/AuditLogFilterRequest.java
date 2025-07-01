@@ -2,6 +2,7 @@ package com.aiportal.learning.dto;
 
 import com.aiportal.learning.validation.NoXSS;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -10,6 +11,7 @@ public class AuditLogFilterRequest {
     private int page = 0;
     
     @Min(value = 1, message = "Page size must be at least 1")
+    @Max(value = 100, message = "Page size must not exceed 100")
     private int size = 10;
     
     @Size(max = 100, message = "Entity name must not exceed 100 characters")
