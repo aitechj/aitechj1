@@ -132,33 +132,84 @@ describe('Admin Audit Flow', () => {
     cy.login(adminUser.email, adminUser.password)
     cy.checkAuthCookie()
     
-    cy.request({
-      method: 'GET',
-      url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=10`,
-      failOnStatusCode: false
-    }).then((resp) => {
-      cy.log(`Valid request status: ${resp.status}`)
-      expect(resp.status).to.eq(200)
+    cy.getCookies().then((cookies) => {
+      cy.log(`All cookies found: ${JSON.stringify(cookies.map(c => ({name: c.name, domain: c.domain})))}`)
       
-      return cy.request({
-        method: 'GET',
-        url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=-1&size=10`,
-        failOnStatusCode: false
-      })
-    }).then((resp) => {
-      cy.log(`Invalid page request status: ${resp.status}`)
-      cy.log(`Response body: ${JSON.stringify(resp.body)}`)
-      expect(resp.status).to.eq(400)
+      const authCookie = cookies.find(cookie => cookie.name === 'auth_token')
+      cy.log(`Auth cookie found: ${authCookie ? 'YES' : 'NO'}`)
       
-      return cy.request({
-        method: 'GET',
-        url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=101`,
-        failOnStatusCode: false
-      })
-    }).then((resp) => {
-      cy.log(`Invalid size request status: ${resp.status}`)
-      cy.log(`Response body: ${JSON.stringify(resp.body)}`)
-      expect(resp.status).to.eq(400)
+      if (!authCookie) {
+        cy.log('Trying to make requests without explicit cookie headers to rely on automatic cookie handling')
+        
+        cy.request({
+          method: 'GET',
+          url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=10`,
+          failOnStatusCode: false
+        }).then((resp) => {
+          cy.log(`Valid request status: ${resp.status}`)
+          expect(resp.status).to.eq(200)
+          
+          return cy.request({
+            method: 'GET',
+            url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=-1&size=10`,
+            failOnStatusCode: false
+          })
+        }).then((resp) => {
+          cy.log(`Invalid page request status: ${resp.status}`)
+          cy.log(`Response body: ${JSON.stringify(resp.body)}`)
+          expect(resp.status).to.eq(400)
+          
+          return cy.request({
+            method: 'GET',
+            url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=101`,
+            failOnStatusCode: false
+          })
+        }).then((resp) => {
+          cy.log(`Invalid size request status: ${resp.status}`)
+          cy.log(`Response body: ${JSON.stringify(resp.body)}`)
+          expect(resp.status).to.eq(400)
+        })
+      } else {
+        cy.log(`Using explicit cookie header with value: ${authCookie.value.substring(0, 20)}...`)
+        
+        cy.request({
+          method: 'GET',
+          url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=10`,
+          headers: {
+            'Cookie': `auth_token=${authCookie.value}`
+          },
+          failOnStatusCode: false
+        }).then((resp) => {
+          cy.log(`Valid request status: ${resp.status}`)
+          expect(resp.status).to.eq(200)
+          
+          cy.request({
+            method: 'GET',
+            url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=-1&size=10`,
+            headers: {
+              'Cookie': `auth_token=${authCookie.value}`
+            },
+            failOnStatusCode: false
+          }).then((resp) => {
+            cy.log(`Invalid page request status: ${resp.status}`)
+            cy.log(`Response body: ${JSON.stringify(resp.body)}`)
+            expect(resp.status).to.eq(400)
+            
+            cy.request({
+              method: 'GET',
+              url: `${Cypress.env('API_BASE_URL')}/api/audit/logs?page=0&size=101`,
+              headers: {
+                'Cookie': `auth_token=${authCookie.value}`
+              },
+              failOnStatusCode: false
+            }).then((resp) => {
+              cy.log(`Invalid size request status: ${resp.status}`)
+              cy.log(`Response body: ${JSON.stringify(resp.body)}`)
+              expect(resp.status).to.eq(400)
+            })
+          })
+        })
+      }
     })
   })
 
