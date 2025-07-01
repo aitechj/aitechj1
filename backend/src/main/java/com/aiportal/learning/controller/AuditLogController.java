@@ -1,7 +1,11 @@
 package com.aiportal.learning.controller;
 
+import com.aiportal.learning.dto.AuditLogFilterRequest;
+import com.aiportal.learning.dto.AuditLogRequest;
+import com.aiportal.learning.dto.PaginationRequest;
 import com.aiportal.learning.model.AuditLog;
 import com.aiportal.learning.service.AuditLogService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,56 +21,67 @@ public class AuditLogController {
     
     @GetMapping("/logs")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate) {
-        return ResponseEntity.ok(auditLogService.getAllAuditLogs(page, size, startDate, endDate));
+    public ResponseEntity<Page<AuditLog>> getAllAuditLogs(@Valid AuditLogFilterRequest filterRequest) {
+        return ResponseEntity.ok(auditLogService.getAllAuditLogs(
+            filterRequest.getPage(), 
+            filterRequest.getSize(), 
+            filterRequest.getStartDate(), 
+            filterRequest.getEndDate()
+        ));
     }
     
     @GetMapping("/logs/entity/{entityName}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate) {
-        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(entityName, page, size, startDate, endDate));
+            @Valid AuditLogFilterRequest filterRequest) {
+        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(
+            entityName, 
+            filterRequest.getPage(), 
+            filterRequest.getSize(), 
+            filterRequest.getStartDate(), 
+            filterRequest.getEndDate()
+        ));
     }
     
     @GetMapping("/logs/severity/{severity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate) {
-        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(severity, page, size, startDate, endDate));
+            @Valid AuditLogFilterRequest filterRequest) {
+        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(
+            severity, 
+            filterRequest.getPage(), 
+            filterRequest.getSize(), 
+            filterRequest.getStartDate(), 
+            filterRequest.getEndDate()
+        ));
     }
     
     @GetMapping("/logs/user/{userId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByUser(
             @PathVariable Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(auditLogService.getAuditLogsByUser(userId, page, size));
+            @Valid PaginationRequest paginationRequest) {
+        return ResponseEntity.ok(auditLogService.getAuditLogsByUser(
+            userId, 
+            paginationRequest.getPage(), 
+            paginationRequest.getSize()
+        ));
     }
     
     @PostMapping("/logs/manual")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Void> createManualAuditLog(
-            @RequestParam String entityName,
-            @RequestParam String entityId,
-            @RequestParam String operation,
-            @RequestParam(required = false) String oldValues,
-            @RequestParam(required = false) String newValues,
-            @RequestParam(required = false) Long userId,
-            @RequestParam(defaultValue = "INFO") String severity) {
-        auditLogService.createManualAuditLog(entityName, entityId, operation, oldValues, newValues, userId, severity);
+    public ResponseEntity<Void> createManualAuditLog(@Valid @RequestBody AuditLogRequest auditLogRequest) {
+        auditLogService.createManualAuditLog(
+            auditLogRequest.getEntityName(),
+            auditLogRequest.getEntityId(),
+            auditLogRequest.getOperation(),
+            auditLogRequest.getOldValues(),
+            auditLogRequest.getNewValues(),
+            auditLogRequest.getUserId(),
+            auditLogRequest.getSeverity()
+        );
         return ResponseEntity.ok().build();
     }
 }
