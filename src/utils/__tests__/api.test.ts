@@ -1,5 +1,14 @@
 import { authApi } from '../api'
 
+jest.mock('../api', () => ({
+  authApi: {
+    login: jest.fn(),
+    register: jest.fn(),
+    logout: jest.fn(),
+    getCurrentUser: jest.fn(),
+  },
+}))
+
 const mockAuthApi = authApi as jest.Mocked<typeof authApi>
 
 describe('API Client Cookie Handling', () => {

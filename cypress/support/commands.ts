@@ -2,6 +2,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       login(email: string, password: string): Chainable<void>
+      loginAdmin(): Chainable<void>
       register(userData: {
         firstName: string
         lastName: string
@@ -49,6 +50,23 @@ Cypress.Commands.add('register', (userData) => {
 
 Cypress.Commands.add('checkAuthCookie', () => {
   cy.request(`${Cypress.env('API_BASE_URL')}/api/auth/me`).its('status').should('eq', 200)
+})
+
+Cypress.Commands.add('loginAdmin', () => {
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('API_BASE_URL')}/api/auth/login`,
+    body: { 
+      email: 'isha.bahati@hotmail.com', 
+      password: 'Techjadmin@1234!@#$' 
+    }
+  }).then((resp) => {
+    expect(resp.status).to.eq(200)
+    expect(resp.headers['set-cookie']).to.exist
+    const setCookieHeader = resp.headers['set-cookie']
+    const cookieString = Array.isArray(setCookieHeader) ? setCookieHeader.join(';') : setCookieHeader
+    expect(cookieString).to.include('HttpOnly')
+  })
 })
 
 Cypress.Commands.add('clearAuthCookie', () => {
