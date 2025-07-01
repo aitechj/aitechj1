@@ -19,7 +19,7 @@ public class DataInitializer implements CommandLineRunner {
     
     private String adminEmail = "isha.bahati@hotmail.com";
     
-    @Value("${app_admin_password:admin123}")
+    @Value("${app_admin_password:Techjadmin@1234!@#$}")
     private String adminPassword;
     
     @Override
@@ -34,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setLastName("User");
             admin.setRole(User.Role.ADMIN);
             admin.setSubscription(User.Subscription.ENTERPRISE);
+            admin.setDeletable(false);
             
             userRepository.save(admin);
             System.out.println("Admin user created: " + adminEmail);
@@ -44,6 +45,7 @@ public class DataInitializer implements CommandLineRunner {
                 existingAdmin.setPassword(encodedPassword);
                 existingAdmin.setRole(User.Role.ADMIN);
                 existingAdmin.setSubscription(User.Subscription.ENTERPRISE);
+                existingAdmin.setDeletable(false);
                 userRepository.save(existingAdmin);
                 System.out.println("Admin user password updated: " + adminEmail);
             } else {
