@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth, type User } from '@/components/auth/AuthProvider';
 
 interface NavigationProps {
   currentPage?: string;
@@ -9,7 +9,7 @@ interface NavigationProps {
 export default function Navigation({ currentPage }: NavigationProps) {
   const { user, isAuthenticated, logout } = useAuth();
   
-  const isAdminUser = (user: any) => {
+  const isAdminUser = (user: User | null) => {
     return user?.role === 'admin' && user?.email === 'isha.bahati@hotmail.com';
   };
   
