@@ -1,8 +1,6 @@
 package com.aiportal.learning.controller;
 
-import com.aiportal.learning.dto.AuditLogFilterRequest;
 import com.aiportal.learning.dto.AuditLogRequest;
-import com.aiportal.learning.dto.PaginationRequest;
 import com.aiportal.learning.model.AuditLog;
 import com.aiportal.learning.service.AuditLogService;
 import jakarta.validation.Valid;
@@ -22,85 +20,74 @@ public class AuditLogController {
     @GetMapping("/logs")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAllAuditLogs(
-            @ModelAttribute AuditLogFilterRequest filterRequest) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
         
-        if (filterRequest.getPage() < 0) {
+        if (page < 0) {
             throw new IllegalArgumentException("Page number must be non-negative");
         }
-        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+        if (size < 1 || size > 100) {
             throw new IllegalArgumentException("Page size must be between 1 and 100");
         }
         
-        return ResponseEntity.ok(auditLogService.getAllAuditLogs(
-            filterRequest.getPage(), 
-            filterRequest.getSize(), 
-            filterRequest.getStartDate(), 
-            filterRequest.getEndDate()
-        ));
+        return ResponseEntity.ok(auditLogService.getAllAuditLogs(page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/entity/{entityName}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByEntity(
             @PathVariable String entityName,
-            @ModelAttribute AuditLogFilterRequest filterRequest) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
         
-        if (filterRequest.getPage() < 0) {
+        if (page < 0) {
             throw new IllegalArgumentException("Page number must be non-negative");
         }
-        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+        if (size < 1 || size > 100) {
             throw new IllegalArgumentException("Page size must be between 1 and 100");
         }
         
-        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(
-            entityName, 
-            filterRequest.getPage(), 
-            filterRequest.getSize(), 
-            filterRequest.getStartDate(), 
-            filterRequest.getEndDate()
-        ));
+        return ResponseEntity.ok(auditLogService.getAuditLogsByEntity(entityName, page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/severity/{severity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsBySeverity(
             @PathVariable String severity,
-            @ModelAttribute AuditLogFilterRequest filterRequest) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
         
-        if (filterRequest.getPage() < 0) {
+        if (page < 0) {
             throw new IllegalArgumentException("Page number must be non-negative");
         }
-        if (filterRequest.getSize() < 1 || filterRequest.getSize() > 100) {
+        if (size < 1 || size > 100) {
             throw new IllegalArgumentException("Page size must be between 1 and 100");
         }
         
-        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(
-            severity, 
-            filterRequest.getPage(), 
-            filterRequest.getSize(), 
-            filterRequest.getStartDate(), 
-            filterRequest.getEndDate()
-        ));
+        return ResponseEntity.ok(auditLogService.getAuditLogsBySeverity(severity, page, size, startDate, endDate));
     }
     
     @GetMapping("/logs/user/{userId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<AuditLog>> getAuditLogsByUser(
             @PathVariable Long userId,
-            @ModelAttribute PaginationRequest paginationRequest) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         
-        if (paginationRequest.getPage() < 0) {
+        if (page < 0) {
             throw new IllegalArgumentException("Page number must be non-negative");
         }
-        if (paginationRequest.getSize() < 1 || paginationRequest.getSize() > 100) {
+        if (size < 1 || size > 100) {
             throw new IllegalArgumentException("Page size must be between 1 and 100");
         }
         
-        return ResponseEntity.ok(auditLogService.getAuditLogsByUser(
-            userId, 
-            paginationRequest.getPage(), 
-            paginationRequest.getSize()
-        ));
+        return ResponseEntity.ok(auditLogService.getAuditLogsByUser(userId, page, size));
     }
     
     @PostMapping("/logs/manual")
