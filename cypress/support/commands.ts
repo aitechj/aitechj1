@@ -26,6 +26,16 @@ Cypress.Commands.add('login', (email: string, password: string) => {
     const setCookieHeader = resp.headers['set-cookie']
     const cookieString = Array.isArray(setCookieHeader) ? setCookieHeader.join(';') : setCookieHeader
     expect(cookieString).to.include('HttpOnly')
+    
+    const authTokenMatch = cookieString.match(/auth_token=([^;]+)/)
+    if (authTokenMatch) {
+      cy.setCookie('auth_token', authTokenMatch[1], {
+        domain: 'aitechj-backend-v2.fly.dev',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'no_restriction'
+      })
+    }
   })
 })
 
@@ -45,14 +55,27 @@ Cypress.Commands.add('register', (userData) => {
     const setCookieHeader = resp.headers['set-cookie']
     const cookieString = Array.isArray(setCookieHeader) ? setCookieHeader.join(';') : setCookieHeader
     expect(cookieString).to.include('HttpOnly')
+    
+    const authTokenMatch = cookieString.match(/auth_token=([^;]+)/)
+    if (authTokenMatch) {
+      cy.setCookie('auth_token', authTokenMatch[1], {
+        domain: 'aitechj-backend-v2.fly.dev',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'no_restriction'
+      })
+    }
   })
 })
 
 Cypress.Commands.add('checkAuthCookie', () => {
-  cy.request({
-    url: `${Cypress.env('API_BASE_URL')}/api/auth/me`,
-    timeout: 15000
-  }).its('status').should('eq', 200)
+  cy.getCookie('auth_token').then((cookie) => {
+    cy.request({
+      url: `${Cypress.env('API_BASE_URL')}/api/auth/me`,
+      timeout: 15000,
+      headers: cookie ? { 'Cookie': `auth_token=${cookie.value}` } : {}
+    }).its('status').should('eq', 200)
+  })
 })
 
 Cypress.Commands.add('loginAdmin', () => {
