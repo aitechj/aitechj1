@@ -30,7 +30,6 @@ Cypress.Commands.add('login', (email: string, password: string) => {
     const authTokenMatch = cookieString.match(/auth_token=([^;]+)/)
     if (authTokenMatch) {
       cy.setCookie('auth_token', authTokenMatch[1], {
-        domain: 'aitechj-backend-v2.fly.dev',
         httpOnly: true,
         secure: true,
         sameSite: 'no_restriction'
@@ -59,7 +58,6 @@ Cypress.Commands.add('register', (userData) => {
     const authTokenMatch = cookieString.match(/auth_token=([^;]+)/)
     if (authTokenMatch) {
       cy.setCookie('auth_token', authTokenMatch[1], {
-        domain: 'aitechj-backend-v2.fly.dev',
         httpOnly: true,
         secure: true,
         sameSite: 'no_restriction'
