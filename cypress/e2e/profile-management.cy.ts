@@ -44,8 +44,8 @@ describe('Profile Management', () => {
     cy.visit('/profile')
     
     cy.contains('Account Information').should('be.visible')
-    cy.get('input[value="Profile"]').should('be.visible')
-    cy.get('input[value="User"]').should('be.visible')
+    cy.get('input[id="firstName"]').should('have.value', 'Profile')
+    cy.get('input[id="lastName"]').should('have.value', 'User')
     cy.contains('Save Changes').should('be.visible')
   })
 

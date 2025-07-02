@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom'
 
-expect.extend(require('@testing-library/jest-dom/matchers'))
-
 jest.mock('next/navigation', () => ({
   useRouter() {
     return {
@@ -20,7 +18,6 @@ jest.mock('next/navigation', () => ({
     return '/'
   },
 }))
-
 
 process.env.NEXT_PUBLIC_API_URL = 'https://aitechj-backend-v2.fly.dev'
 
