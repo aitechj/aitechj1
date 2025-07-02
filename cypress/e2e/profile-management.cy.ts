@@ -54,9 +54,9 @@ describe('Profile Management', () => {
     cy.visit('/profile')
     
     cy.contains('Subscription & Billing').should('be.visible')
-    cy.contains('Pro Plan').should('be.visible')
-    cy.contains('$29/month').should('be.visible')
-    cy.contains('Next billing: Feb 15, 2024').should('be.visible')
+    cy.contains('Free Plan').should('be.visible')
+    cy.contains('Change Plan').should('be.visible')
+    cy.contains('Cancel Subscription').should('be.visible')
   })
 
   it('should display learning preferences', () => {
