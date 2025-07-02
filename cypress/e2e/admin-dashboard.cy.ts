@@ -29,10 +29,9 @@ describe('Admin Dashboard', () => {
     
     cy.contains('User Management').should('be.visible')
     cy.contains('Add User').should('be.visible')
-    cy.contains('Name').should('be.visible')
-    cy.contains('Email').should('be.visible')
-    cy.contains('Role').should('be.visible')
-    cy.contains('Actions').should('be.visible')
+    cy.contains('John Developer').should('be.visible')
+    cy.contains('john.dev@email.com').should('be.visible')
+    cy.contains('Pro').should('be.visible')
   })
 
   it('should display course management section', () => {
@@ -41,9 +40,9 @@ describe('Admin Dashboard', () => {
     
     cy.contains('Course Management').should('be.visible')
     cy.contains('Add Course').should('be.visible')
-    cy.contains('Course Name').should('be.visible')
-    cy.contains('Instructor').should('be.visible')
-    cy.contains('Students').should('be.visible')
+    cy.contains('Full Stack JavaScript Development').should('be.visible')
+    cy.contains('AWS Cloud Architecture').should('be.visible')
+    cy.contains('847 enrolled').should('be.visible')
   })
 
   it('should display system analytics section', () => {
@@ -51,9 +50,9 @@ describe('Admin Dashboard', () => {
     cy.visit('/admin')
     
     cy.contains('System Analytics').should('be.visible')
-    cy.contains('Server Performance').should('be.visible')
-    cy.contains('Database Performance').should('be.visible')
-    cy.contains('API Metrics').should('be.visible')
+    cy.contains('AI Chat Performance').should('be.visible')
+    cy.contains('User Engagement').should('be.visible')
+    cy.contains('System Health').should('be.visible')
   })
 
   it('should reject non-admin users from admin dashboard', () => {

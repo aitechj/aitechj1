@@ -51,7 +51,7 @@ describe('Dashboard Workflow', () => {
     cy.visit('/dashboard')
     
     cy.contains('AI Chat Usage').should('be.visible')
-    cy.contains('Start New Chat').should('be.visible')
+    cy.contains('Open AI Chat').should('be.visible')
   })
 
   it('should navigate between dashboard sections', () => {

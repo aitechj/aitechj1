@@ -54,8 +54,9 @@ describe('Profile Management', () => {
     cy.visit('/profile')
     
     cy.contains('Subscription & Billing').should('be.visible')
-    cy.contains('Current Plan: Free').should('be.visible')
-    cy.contains('Upgrade Plan').should('be.visible')
+    cy.contains('Pro Plan').should('be.visible')
+    cy.contains('$29/month').should('be.visible')
+    cy.contains('Next billing: Feb 15, 2024').should('be.visible')
   })
 
   it('should display learning preferences', () => {
@@ -63,8 +64,8 @@ describe('Profile Management', () => {
     cy.visit('/profile')
     
     cy.contains('Learning Preferences').should('be.visible')
-    cy.contains('Preferred Learning Style').should('be.visible')
-    cy.contains('Visual').should('be.visible')
+    cy.contains('Preferred Learning Topics').should('be.visible')
+    cy.contains('JavaScript').should('be.visible')
     cy.contains('Save Preferences').should('be.visible')
   })
 
