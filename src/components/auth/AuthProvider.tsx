@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '@aitechj/shared-types';
+import { User } from '@/types';
 
 interface AuthContextType {
   user: User | null;

@@ -1,6 +1,7 @@
 'use client';
 
-import { useAuth, User } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { User } from '@/types';
 
 interface NavigationProps {
   currentPage?: string;
