@@ -1,13 +1,16 @@
+import { 
+  ApiResponse,
+  LoginRequest, 
+  RegisterRequest, 
+  User, 
+  AuthResponse 
+} from '@aitechj/shared-types';
+
 const API_BASE_URL = typeof window !== 'undefined' 
   ? (window as Window).location?.origin?.includes('vercel.app') 
     ? process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev'
     : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev'
   : process.env.NEXT_PUBLIC_API_URL || 'https://aitechj-backend-v2.fly.dev';
-
-interface ApiResponse<T> {
-  data?: T;
-  error?: string;
-}
 
 class ApiClient {
   private getAuthHeaders(): HeadersInit {
@@ -63,34 +66,6 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient();
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-  [key: string]: unknown;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  [key: string]: unknown;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: 'user' | 'admin';
-  subscription: 'free' | 'pro' | 'enterprise';
-}
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
 
 
 export const authApi = {
