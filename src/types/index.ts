@@ -17,6 +17,7 @@ export interface ApiResponse<T> {
 export interface LoginRequest {
   email: string;
   password: string;
+  [key: string]: unknown;
 }
 
 export interface RegisterRequest {
@@ -24,6 +25,7 @@ export interface RegisterRequest {
   password: string;
   firstName: string;
   lastName: string;
+  [key: string]: unknown;
 }
 
 export interface AuthResponse {
