@@ -1,8 +1,6 @@
 'use client';
 
-interface SystemAnalyticsSectionProps {}
-
-export default function SystemAnalyticsSection({}: SystemAnalyticsSectionProps) {
+export default function SystemAnalyticsSection() {
   return (
     <div className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">System Analytics</h2>

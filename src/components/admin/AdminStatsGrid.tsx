@@ -1,8 +1,6 @@
 'use client';
 
-interface AdminStatsGridProps {}
-
-export default function AdminStatsGrid({}: AdminStatsGridProps) {
+export default function AdminStatsGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
       <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">

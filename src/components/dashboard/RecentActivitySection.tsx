@@ -1,8 +1,6 @@
 'use client';
 
-interface RecentActivitySectionProps {}
-
-export default function RecentActivitySection({}: RecentActivitySectionProps) {
+export default function RecentActivitySection() {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">Recent Activity</h2>
@@ -15,7 +13,7 @@ export default function RecentActivitySection({}: RecentActivitySectionProps) {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm">Completed "React Hooks Deep Dive" lesson</p>
+            <p className="text-white text-sm">Completed &quot;React Hooks Deep Dive&quot; lesson</p>
             <p className="text-slate-400 text-xs">2 hours ago</p>
           </div>
         </div>
@@ -27,7 +25,7 @@ export default function RecentActivitySection({}: RecentActivitySectionProps) {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm">Asked AI about "async/await best practices"</p>
+            <p className="text-white text-sm">Asked AI about &quot;async/await best practices&quot;</p>
             <p className="text-slate-400 text-xs">5 hours ago</p>
           </div>
         </div>
@@ -39,7 +37,7 @@ export default function RecentActivitySection({}: RecentActivitySectionProps) {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm">Started "AWS Cloud Architecture" course</p>
+            <p className="text-white text-sm">Started &quot;AWS Cloud Architecture&quot; course</p>
             <p className="text-slate-400 text-xs">1 day ago</p>
           </div>
         </div>
@@ -51,7 +49,7 @@ export default function RecentActivitySection({}: RecentActivitySectionProps) {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm">Earned "JavaScript Expert" badge</p>
+            <p className="text-white text-sm">Earned &quot;JavaScript Expert&quot; badge</p>
             <p className="text-slate-400 text-xs">2 days ago</p>
           </div>
         </div>
@@ -63,7 +61,7 @@ export default function RecentActivitySection({}: RecentActivitySectionProps) {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm">Completed final project for "Node.js Backend"</p>
+            <p className="text-white text-sm">Completed final project for &quot;Node.js Backend&quot;</p>
             <p className="text-slate-400 text-xs">3 days ago</p>
           </div>
         </div>

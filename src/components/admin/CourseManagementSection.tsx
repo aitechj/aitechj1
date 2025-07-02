@@ -1,8 +1,6 @@
 'use client';
 
-interface CourseManagementSectionProps {}
-
-export default function CourseManagementSection({}: CourseManagementSectionProps) {
+export default function CourseManagementSection() {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">

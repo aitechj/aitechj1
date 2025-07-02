@@ -1,8 +1,6 @@
 'use client';
 
-interface AIChatUsageSectionProps {}
-
-export default function AIChatUsageSection({}: AIChatUsageSectionProps) {
+export default function AIChatUsageSection() {
   return (
     <div className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">AI Chat Usage</h2>

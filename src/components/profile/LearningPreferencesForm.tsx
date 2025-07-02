@@ -1,8 +1,6 @@
 'use client';
 
-interface LearningPreferencesFormProps {}
-
-export default function LearningPreferencesForm({}: LearningPreferencesFormProps) {
+export default function LearningPreferencesForm() {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">Learning Preferences</h2>

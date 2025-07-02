@@ -1,8 +1,6 @@
 'use client';
 
-interface CurrentCoursesSectionProps {}
-
-export default function CurrentCoursesSection({}: CurrentCoursesSectionProps) {
+export default function CurrentCoursesSection() {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">Current Courses</h2>
