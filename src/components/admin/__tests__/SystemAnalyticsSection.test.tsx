@@ -12,24 +12,31 @@ describe('SystemAnalyticsSection', () => {
   it('should render analytics metrics', () => {
     render(<SystemAnalyticsSection />)
     
-    expect(screen.getByText('Server Performance')).toBeInTheDocument()
-    expect(screen.getByText('CPU Usage: 45%')).toBeInTheDocument()
-    expect(screen.getByText('Memory Usage: 67%')).toBeInTheDocument()
-    expect(screen.getByText('Disk Usage: 23%')).toBeInTheDocument()
+    expect(screen.getByText('AI Chat Performance')).toBeInTheDocument()
+    expect(screen.getByText('Average Response Time')).toBeInTheDocument()
+    expect(screen.getByText('1.2s')).toBeInTheDocument()
+    expect(screen.getByText('Success Rate')).toBeInTheDocument()
+    expect(screen.getByText('99.7%')).toBeInTheDocument()
     
-    expect(screen.getByText('Database Performance')).toBeInTheDocument()
-    expect(screen.getByText('Query Response Time: 120ms')).toBeInTheDocument()
-    expect(screen.getByText('Active Connections: 45')).toBeInTheDocument()
-    expect(screen.getByText('Cache Hit Rate: 94%')).toBeInTheDocument()
+    expect(screen.getByText('User Engagement')).toBeInTheDocument()
+    expect(screen.getByText('Daily Active Users')).toBeInTheDocument()
+    expect(screen.getByText('1,847')).toBeInTheDocument()
+    
+    expect(screen.getByText('System Health')).toBeInTheDocument()
+    expect(screen.getByText('Server Uptime')).toBeInTheDocument()
+    expect(screen.getByText('99.9%')).toBeInTheDocument()
   })
 
-  it('should render API metrics', () => {
+  it('should render performance metrics', () => {
     render(<SystemAnalyticsSection />)
     
-    expect(screen.getByText('API Metrics')).toBeInTheDocument()
-    expect(screen.getByText('Requests/min: 1,247')).toBeInTheDocument()
-    expect(screen.getByText('Success Rate: 99.2%')).toBeInTheDocument()
-    expect(screen.getByText('Avg Response: 85ms')).toBeInTheDocument()
+    expect(screen.getByText('Performance Metrics')).toBeInTheDocument()
+    expect(screen.getByText('CPU Usage')).toBeInTheDocument()
+    expect(screen.getByText('45%')).toBeInTheDocument()
+    expect(screen.getByText('Memory Usage')).toBeInTheDocument()
+    expect(screen.getByText('67%')).toBeInTheDocument()
+    expect(screen.getByText('Storage Usage')).toBeInTheDocument()
+    expect(screen.getByText('23%')).toBeInTheDocument()
   })
 
   it('should have proper container styling', () => {

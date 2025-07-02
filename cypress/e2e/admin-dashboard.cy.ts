@@ -16,7 +16,7 @@ describe('Admin Dashboard', () => {
     cy.visit('/admin')
     cy.url().should('include', '/admin')
     
-    cy.contains('Admin Dashboard').should('be.visible')
+    cy.contains('Admin Portal').should('be.visible')
     cy.contains('Total Users').should('be.visible')
     cy.contains('Active Courses').should('be.visible')
     cy.contains('AI Chat Queries').should('be.visible')

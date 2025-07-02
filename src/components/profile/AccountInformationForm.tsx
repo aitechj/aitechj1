@@ -18,7 +18,7 @@ export default function AccountInformationForm({ user }: AccountInformationFormP
           <label className="block text-slate-400 text-sm font-medium mb-2">First Name</label>
           <input
             type="text"
-            value={user.firstName}
+            defaultValue={user.firstName}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -26,7 +26,7 @@ export default function AccountInformationForm({ user }: AccountInformationFormP
           <label className="block text-slate-400 text-sm font-medium mb-2">Last Name</label>
           <input
             type="text"
-            value={user.lastName}
+            defaultValue={user.lastName}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -34,7 +34,7 @@ export default function AccountInformationForm({ user }: AccountInformationFormP
           <label className="block text-slate-400 text-sm font-medium mb-2">Email Address</label>
           <input
             type="email"
-            value={user.email}
+            defaultValue={user.email}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
