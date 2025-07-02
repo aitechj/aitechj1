@@ -1,11 +1,11 @@
-import '@testing-library/jest-dom'
 import { authApi } from '../api'
 
-global.fetch = jest.fn()
+const mockFetch = jest.fn()
+global.fetch = mockFetch
 
 describe('authApi', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    mockFetch.mockClear()
   })
 
   it('should call login API endpoint', async () => {
@@ -16,11 +16,11 @@ describe('authApi', () => {
         user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' }
       })
     }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockFetch.mockResolvedValue(mockResponse)
 
     const result = await authApi.login({ email: 'test@example.com', password: 'password' })
 
-    expect(global.fetch).toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalled()
     expect(result.data?.token).toEqual('test-token')
   })
 
@@ -32,7 +32,7 @@ describe('authApi', () => {
         user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' }
       })
     }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockFetch.mockResolvedValue(mockResponse)
 
     const result = await authApi.register({
       email: 'test@example.com',
@@ -41,17 +41,17 @@ describe('authApi', () => {
       lastName: 'User'
     })
 
-    expect(global.fetch).toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalled()
     expect(result.data?.token).toEqual('test-token')
   })
 
   it('should call logout API endpoint', async () => {
     const mockResponse = { ok: true, json: async () => ({}) }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockFetch.mockResolvedValue(mockResponse)
 
     await authApi.logout()
 
-    expect(global.fetch).toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalled()
   })
 
   it('should call getCurrentUser API endpoint', async () => {
@@ -66,11 +66,11 @@ describe('authApi', () => {
       updatedAt: '2024-01-01'
     }
     const mockResponse = { ok: true, json: async () => mockUser }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockFetch.mockResolvedValue(mockResponse)
 
     const result = await authApi.getCurrentUser()
 
-    expect(global.fetch).toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalled()
     expect(result.data?.email).toEqual('test@example.com')
   })
 
@@ -80,7 +80,7 @@ describe('authApi', () => {
       status: 401,
       json: async () => ({ message: 'Unauthorized' })
     }
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+    mockFetch.mockResolvedValue(mockResponse)
 
     const result = await authApi.login({ email: 'test@example.com', password: 'wrong' })
 
