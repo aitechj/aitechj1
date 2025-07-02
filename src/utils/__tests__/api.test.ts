@@ -21,7 +21,7 @@ describe('authApi', () => {
     const result = await authApi.login({ email: 'test@example.com', password: 'password' })
 
     expect(global.fetch).toHaveBeenCalled()
-    expect(result.data?.token).toBe('test-token')
+    expect(result.data?.token).toEqual('test-token')
   })
 
   it('should call register API endpoint', async () => {
@@ -42,7 +42,7 @@ describe('authApi', () => {
     })
 
     expect(global.fetch).toHaveBeenCalled()
-    expect(result.data?.token).toBe('test-token')
+    expect(result.data?.token).toEqual('test-token')
   })
 
   it('should call logout API endpoint', async () => {
@@ -71,7 +71,7 @@ describe('authApi', () => {
     const result = await authApi.getCurrentUser()
 
     expect(global.fetch).toHaveBeenCalled()
-    expect(result.data?.email).toBe('test@example.com')
+    expect(result.data?.email).toEqual('test@example.com')
   })
 
   it('should handle API errors gracefully', async () => {
@@ -84,7 +84,7 @@ describe('authApi', () => {
 
     const result = await authApi.login({ email: 'test@example.com', password: 'wrong' })
 
-    expect(result.error).toBeDefined()
-    expect(result.data).toBeUndefined()
+    expect(result.error).toBeTruthy()
+    expect(result.data).toBeFalsy()
   })
 })

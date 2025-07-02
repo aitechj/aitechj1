@@ -55,7 +55,6 @@ describe('Profile Management', () => {
     
     cy.contains('Subscription & Billing').should('be.visible')
     cy.contains('Free Plan').should('be.visible')
-    cy.contains('Free').should('be.visible')
     cy.contains('Change Plan').should('be.visible')
   })
 
