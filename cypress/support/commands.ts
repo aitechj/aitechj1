@@ -51,8 +51,7 @@ Cypress.Commands.add('register', (userData) => {
 Cypress.Commands.add('checkAuthCookie', () => {
   cy.request({
     url: `${Cypress.env('API_BASE_URL')}/api/auth/me`,
-    timeout: 10000,
-    retries: 2
+    timeout: 10000
   }).its('status').should('eq', 200)
 })
 
