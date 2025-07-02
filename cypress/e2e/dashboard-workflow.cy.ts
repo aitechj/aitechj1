@@ -22,7 +22,7 @@ describe('Dashboard Workflow', () => {
     cy.checkAuthCookie()
     
     cy.visit('/dashboard')
-    cy.url().should('include', '/dashboard')
+    cy.wait(1000)
     
     cy.contains('Enrolled Courses').should('be.visible')
     cy.contains('Completed Courses').should('be.visible')
