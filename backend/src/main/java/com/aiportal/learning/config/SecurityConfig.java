@@ -61,7 +61,7 @@ public class SecurityConfig {
                                     "style-src 'self' 'unsafe-inline'; " +
                                     "img-src 'self' data: https:; " +
                                     "font-src 'self'; " +
-                                    "connect-src 'self' https://api.aitechj.com; " +
+                                    "connect-src 'self' https://api.aitechj.com https://aitechj-backend-v2.fly.dev; " +
                                     "frame-ancestors 'none'; " +
                                     "base-uri 'self'; " +
                                     "form-action 'self'"))
