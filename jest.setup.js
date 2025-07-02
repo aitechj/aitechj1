@@ -21,20 +21,6 @@ jest.mock('next/navigation', () => ({
   },
 }))
 
-jest.mock('@/utils/api', () => ({
-  authApi: {
-    getCurrentUser: jest.fn(),
-    login: jest.fn(),
-    register: jest.fn(),
-    logout: jest.fn(),
-  },
-  apiClient: {
-    get: jest.fn(),
-    post: jest.fn(),
-    put: jest.fn(),
-    delete: jest.fn(),
-  },
-}))
 
 process.env.NEXT_PUBLIC_API_URL = 'https://aitechj-backend-v2.fly.dev'
 

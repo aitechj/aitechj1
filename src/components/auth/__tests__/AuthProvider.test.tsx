@@ -1,7 +1,17 @@
 import React from 'react'
 import { render, screen, waitFor, act } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import { AuthProvider, useAuth } from '../AuthProvider'
 import { authApi } from '@/utils/api'
+
+jest.mock('@/utils/api', () => ({
+  authApi: {
+    getCurrentUser: jest.fn(),
+    login: jest.fn(),
+    register: jest.fn(),
+    logout: jest.fn(),
+  },
+}))
 
 const mockAuthApi = authApi as jest.Mocked<typeof authApi>
 
@@ -48,7 +58,7 @@ describe('AuthProvider', () => {
 
   it('should set user from getCurrentUser API call', async () => {
     mockAuthApi.getCurrentUser.mockResolvedValue({
-      data: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+      data: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free', createdAt: '2024-01-01', updatedAt: '2024-01-01' },
     })
 
     await act(async () => {
@@ -69,7 +79,7 @@ describe('AuthProvider', () => {
     mockAuthApi.login.mockResolvedValue({
       data: {
         token: 'jwt-token',
-        user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+        user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free', createdAt: '2024-01-01', updatedAt: '2024-01-01' },
       },
     })
 
@@ -98,7 +108,7 @@ describe('AuthProvider', () => {
 
   it('should handle logout with API call', async () => {
     mockAuthApi.getCurrentUser.mockResolvedValue({
-      data: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free' },
+      data: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'user', subscription: 'free', createdAt: '2024-01-01', updatedAt: '2024-01-01' },
     })
     mockAuthApi.logout.mockResolvedValue({ data: undefined })
 
