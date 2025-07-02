@@ -4,7 +4,7 @@ export default function LearningPreferencesForm() {
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold text-white mb-6">Learning Preferences</h2>
-      
+
       <div className="space-y-6">
         <div>
           <label className="block text-slate-400 text-sm font-medium mb-3">Preferred Learning Topics</label>
@@ -17,7 +17,7 @@ export default function LearningPreferencesForm() {
             ))}
           </div>
         </div>
-        
+
         <div>
           <label className="block text-slate-400 text-sm font-medium mb-3">Difficulty Level</label>
           <div className="flex space-x-4">
@@ -29,7 +29,7 @@ export default function LearningPreferencesForm() {
             ))}
           </div>
         </div>
-        
+
         <div>
           <label className="block text-slate-400 text-sm font-medium mb-3">Email Notifications</label>
           <div className="space-y-2">
@@ -47,7 +47,7 @@ export default function LearningPreferencesForm() {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-end mt-6">
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
           Save Preferences

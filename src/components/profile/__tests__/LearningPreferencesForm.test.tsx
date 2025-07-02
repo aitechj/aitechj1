@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import LearningPreferencesForm from '../LearningPreferencesForm'
 
@@ -10,42 +11,48 @@ describe('LearningPreferencesForm', () => {
     expect(screen.getByText('Learning Preferences')).toBeInTheDocument()
   })
 
-  it('should render preference options', () => {
+  it('should render learning topics', () => {
     render(<LearningPreferencesForm />)
     
-    expect(screen.getByText('Preferred Learning Style')).toBeInTheDocument()
-    expect(screen.getByText('Visual')).toBeInTheDocument()
-    expect(screen.getByText('Auditory')).toBeInTheDocument()
-    expect(screen.getByText('Kinesthetic')).toBeInTheDocument()
-    expect(screen.getByText('Reading/Writing')).toBeInTheDocument()
+    expect(screen.getByText('Preferred Learning Topics')).toBeInTheDocument()
+    expect(screen.getByText('JavaScript')).toBeInTheDocument()
+    expect(screen.getByText('Python')).toBeInTheDocument()
+    expect(screen.getByText('React')).toBeInTheDocument()
+    expect(screen.getByText('Node.js')).toBeInTheDocument()
+    expect(screen.getByText('AWS')).toBeInTheDocument()
+    expect(screen.getByText('Docker')).toBeInTheDocument()
+    expect(screen.getByText('DevOps')).toBeInTheDocument()
+    expect(screen.getByText('Machine Learning')).toBeInTheDocument()
+    expect(screen.getByText('Cybersecurity')).toBeInTheDocument()
   })
 
   it('should render difficulty level options', () => {
     render(<LearningPreferencesForm />)
     
-    expect(screen.getByText('Preferred Difficulty Level')).toBeInTheDocument()
+    expect(screen.getByText('Difficulty Level')).toBeInTheDocument()
     expect(screen.getByText('Beginner')).toBeInTheDocument()
     expect(screen.getByText('Intermediate')).toBeInTheDocument()
     expect(screen.getByText('Advanced')).toBeInTheDocument()
   })
 
-  it('should render notification preferences', () => {
+  it('should render email notification preferences', () => {
     render(<LearningPreferencesForm />)
     
-    expect(screen.getByText('Notification Preferences')).toBeInTheDocument()
-    expect(screen.getByText('Email notifications')).toBeInTheDocument()
-    expect(screen.getByText('Push notifications')).toBeInTheDocument()
-    expect(screen.getByText('Weekly progress reports')).toBeInTheDocument()
+    expect(screen.getByText('Email Notifications')).toBeInTheDocument()
+    expect(screen.getByText('Course updates and new content')).toBeInTheDocument()
+    expect(screen.getByText('Learning reminders and streaks')).toBeInTheDocument()
+    expect(screen.getByText('AI chat improvements and tips')).toBeInTheDocument()
+    expect(screen.getByText('Platform updates and announcements')).toBeInTheDocument()
   })
 
-  it('should allow selecting preferences', async () => {
+  it('should allow selecting topic preferences', async () => {
     const user = userEvent.setup()
     render(<LearningPreferencesForm />)
     
-    const visualOption = screen.getByLabelText('Visual')
-    await user.click(visualOption)
+    const javascriptOption = screen.getByLabelText('JavaScript')
+    await user.click(javascriptOption)
     
-    expect(visualOption).toBeChecked()
+    expect(javascriptOption).toBeChecked()
   })
 
   it('should render save preferences button', () => {

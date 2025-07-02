@@ -15,32 +15,36 @@ export default function AccountInformationForm({ user }: AccountInformationFormP
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-slate-400 text-sm font-medium mb-2">First Name</label>
+          <label htmlFor="firstName" className="block text-slate-400 text-sm font-medium mb-2">First Name</label>
           <input
+            id="firstName"
             type="text"
             defaultValue={user.firstName}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-slate-400 text-sm font-medium mb-2">Last Name</label>
+          <label htmlFor="lastName" className="block text-slate-400 text-sm font-medium mb-2">Last Name</label>
           <input
+            id="lastName"
             type="text"
             defaultValue={user.lastName}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-slate-400 text-sm font-medium mb-2">Email Address</label>
+          <label htmlFor="email" className="block text-slate-400 text-sm font-medium mb-2">Email Address</label>
           <input
+            id="email"
             type="email"
             defaultValue={user.email}
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-slate-400 text-sm font-medium mb-2">Bio</label>
+          <label htmlFor="bio" className="block text-slate-400 text-sm font-medium mb-2">Bio</label>
           <textarea
+            id="bio"
             rows={3}
             placeholder="Tell us about yourself and your learning goals..."
             className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
