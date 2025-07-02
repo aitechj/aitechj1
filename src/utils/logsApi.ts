@@ -2,7 +2,7 @@ const LOGS_API_BASE_URL = typeof window !== 'undefined'
   ? process.env.NEXT_PUBLIC_LOGS_API_URL || 'https://logs.aitechj.com'
   : process.env.NEXT_PUBLIC_LOGS_API_URL || 'https://logs.aitechj.com';
 
-import { ApiResponse } from '@aitechj/shared-types';
+import { ApiResponse } from '@/types';
 
 class LogsApiClient {
   private getAuthHeaders(): HeadersInit {

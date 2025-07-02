@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/components/auth/AuthProvider';
-import { User } from '@aitechj/shared-types';
+import { User } from '@/types';
 
 interface NavigationProps {
   currentPage?: string;

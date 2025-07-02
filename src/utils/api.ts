@@ -4,7 +4,7 @@ import {
   RegisterRequest, 
   User, 
   AuthResponse 
-} from '@aitechj/shared-types';
+} from '@/types';
 
 const API_BASE_URL = typeof window !== 'undefined' 
   ? (window as Window).location?.origin?.includes('vercel.app') 
