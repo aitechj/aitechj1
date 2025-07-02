@@ -7,16 +7,24 @@ spring:
     name: ai-learning-portal
   
   datasource:
-    url: jdbc:h2:file:./data/learning;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    url: jdbc:h2:file:./data/learning;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;CIPHER=AES
     driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_FILE_PASSWORD} ${DATABASE_USER_PASSWORD}
   
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
+  
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 2
+    connection-timeout: 30000
+    idle-timeout: 600000
+    max-lifetime: 1800000
+    leak-detection-threshold: 60000
   
   h2:
     console:
