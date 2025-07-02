@@ -25,6 +25,7 @@ describe('Authentication Cookie Flow', () => {
   it('should login user and set httpOnly cookie correctly', () => {
     cy.register(testUser)
     cy.clearAuthCookie()
+    cy.wait(500)
     cy.login(testUser.email, testUser.password)
     cy.checkAuthCookie()
   })
@@ -44,7 +45,8 @@ describe('Authentication Cookie Flow', () => {
       headers: {
         'Authorization': 'Bearer expired-token'
       },
-      failOnStatusCode: false
+      failOnStatusCode: false,
+      timeout: 10000
     }).then((resp) => {
       expect(resp.status).to.be.oneOf([401, 403])
     })

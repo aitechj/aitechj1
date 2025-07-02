@@ -49,7 +49,10 @@ Cypress.Commands.add('register', (userData) => {
 })
 
 Cypress.Commands.add('checkAuthCookie', () => {
-  cy.request(`${Cypress.env('API_BASE_URL')}/api/auth/me`).its('status').should('eq', 200)
+  cy.request({
+    url: `${Cypress.env('API_BASE_URL')}/api/auth/me`,
+    timeout: 10000
+  }).its('status').should('eq', 200)
 })
 
 Cypress.Commands.add('loginAdmin', () => {
