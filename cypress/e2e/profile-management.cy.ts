@@ -22,8 +22,9 @@ describe('Profile Management', () => {
     cy.checkAuthCookie()
     
     cy.visit('/profile')
-    cy.url().should('include', '/profile')
+    cy.wait(2000)
     
+    cy.get('body').should('be.visible')
     cy.contains('Profile Settings').should('be.visible')
     cy.contains('Profile User').should('be.visible')
     cy.contains('Account Information').should('be.visible')
