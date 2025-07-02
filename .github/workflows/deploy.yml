@@ -74,6 +74,9 @@ jobs:
 
       - name: Deploy to Fly.io
         run: |
+          flyctl secrets set DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" --app aitechj-backend-v2
+          flyctl secrets set DATABASE_FILE_PASSWORD="${{ secrets.DATABASE_FILE_PASSWORD }}" --app aitechj-backend-v2
+          flyctl secrets set DATABASE_USER_PASSWORD="${{ secrets.DATABASE_USER_PASSWORD }}" --app aitechj-backend-v2
           flyctl deploy --app aitechj-backend-v2 --config ./fly.toml --remote-only
         working-directory: ./backend
         env:
