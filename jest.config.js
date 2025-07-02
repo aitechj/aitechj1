@@ -31,13 +31,6 @@ const customJestConfig = {
       statements: 60
     }
   },
-  preset: 'ts-jest/presets/default-esm',
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    },
-  },
 }
 
 module.exports = createJestConfig(customJestConfig)
