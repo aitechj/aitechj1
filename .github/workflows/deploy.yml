@@ -26,6 +26,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build shared types package
+        run: cd shared-types && npm run build
+
+      - name: Reinstall dependencies to link shared types
+        run: pnpm install --frozen-lockfile
+
       - name: Run type check
         run: pnpm run build
 
