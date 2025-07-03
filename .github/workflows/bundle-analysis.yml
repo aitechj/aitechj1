@@ -1,0 +1,49 @@
+name: Bundle Size Analysis
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  bundle-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Build shared types package
+        run: cd shared-types && npm run build
+      
+      - name: Reinstall dependencies to link shared types
+        run: pnpm install --frozen-lockfile
+      
+      - name: Generate bundle analysis
+        run: pnpm run build:analyze
+      
+      - name: Upload bundle analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis-report
+          path: .next/bundle-analyzer-report.html
+      
+      - name: Compare bundle sizes
+        run: node scripts/bundle-size-check.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
