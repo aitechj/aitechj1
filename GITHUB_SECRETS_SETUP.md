@@ -8,7 +8,7 @@ The following secrets must be configured in the GitHub repository settings for t
 ```
 DATABASE_USERNAME=aitechj-db-pswd
 DATABASE_PASSWORD=Techjadmin@1234!@#$
-DATABASE_URL=jdbc:postgresql://your-postgres-host:5432/learning_portal
+DATABASE_URL=jdbc:postgresql://aitechj-postgres.flycast:5432/learning_portal
 ```
 
 ### JWT Authentication Secret
