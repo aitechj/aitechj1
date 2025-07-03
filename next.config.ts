@@ -81,10 +81,17 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
-  
-  ...(process.env.ANALYZE === 'true' && {
-    webpack: (config, { dev, isServer }) => {
-      if (!dev && !isServer) {
+};
+
+if (process.env.ANALYZE === 'true') {
+  const originalWebpack = nextConfig.webpack;
+  nextConfig.webpack = (config, options) => {
+    if (originalWebpack) {
+      config = originalWebpack(config, options);
+    }
+    
+    if (!options.dev && !options.isServer) {
+      try {
         const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
         config.plugins.push(
           new BundleAnalyzerPlugin({
@@ -93,10 +100,12 @@ const nextConfig: NextConfig = {
             reportFilename: 'bundle-analyzer-report.html',
           })
         );
+      } catch (error) {
+        console.warn('webpack-bundle-analyzer not available, skipping bundle analysis');
       }
-      return config;
-    },
-  }),
-};
+    }
+    return config;
+  };
+}
 
 export default nextConfig;
