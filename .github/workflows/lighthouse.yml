@@ -53,9 +53,9 @@ jobs:
 
       - name: Run Lighthouse CI
         run: |
-          pwd
-          ls -la lighthouserc.js
-          lhci autorun --config=$PWD/lighthouserc.js
+          lhci collect --url="http://localhost:3000" --url="http://localhost:3000/dashboard" --url="http://localhost:3000/admin" --url="http://localhost:3000/profile" --numberOfRuns=3
+          lhci assert --preset=lighthouse:recommended
+          lhci upload --target=temporary-public-storage
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
           LHCI_BUILD_CONTEXT__COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
