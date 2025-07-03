@@ -3,13 +3,12 @@
 import { Navigation } from '@/components';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { 
-  AdminStatsGrid, 
-  UserManagementSection, 
-  CourseManagementSection, 
-  SystemAnalyticsSection 
-} from '@/components/admin';
+import { useEffect, Suspense, lazy } from 'react';
+
+const AdminStatsGrid = lazy(() => import('@/components/admin/AdminStatsGrid'));
+const UserManagementSection = lazy(() => import('@/components/admin/UserManagementSection'));
+const CourseManagementSection = lazy(() => import('@/components/admin/CourseManagementSection'));
+const SystemAnalyticsSection = lazy(() => import('@/components/admin/SystemAnalyticsSection'));
 
 export default function AdminPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -54,16 +53,68 @@ export default function AdminPage() {
         </div>
 
         {/* Admin Stats */}
-        <AdminStatsGrid />
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+                <div className="h-4 bg-slate-700 rounded mb-2"></div>
+                <div className="h-8 bg-slate-700 rounded"></div>
+              </div>
+            ))}
+          </div>
+        }>
+          <AdminStatsGrid />
+        </Suspense>
 
         {/* Admin Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <UserManagementSection />
-          <CourseManagementSection />
+          <Suspense fallback={
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-16 bg-slate-700 rounded"></div>
+                ))}
+              </div>
+            </div>
+          }>
+            <UserManagementSection />
+          </Suspense>
+          
+          <Suspense fallback={
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-16 bg-slate-700 rounded"></div>
+                ))}
+              </div>
+            </div>
+          }>
+            <CourseManagementSection />
+          </Suspense>
         </div>
 
         {/* System Analytics */}
-        <SystemAnalyticsSection />
+        <Suspense fallback={
+          <div className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+            <div className="h-6 bg-slate-700 rounded mb-6"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-slate-700/50 rounded-lg p-4">
+                  <div className="h-4 bg-slate-600 rounded mb-4"></div>
+                  <div className="space-y-2">
+                    {[...Array(4)].map((_, j) => (
+                      <div key={j} className="h-3 bg-slate-600 rounded"></div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        }>
+          <SystemAnalyticsSection />
+        </Suspense>
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">

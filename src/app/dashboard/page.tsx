@@ -1,10 +1,12 @@
+'use client';
+
 import { Navigation } from '@/components';
-import { 
-  DashboardStatsGrid, 
-  CurrentCoursesSection, 
-  RecentActivitySection, 
-  AIChatUsageSection 
-} from '@/components/dashboard';
+import { Suspense, lazy } from 'react';
+
+const DashboardStatsGrid = lazy(() => import('@/components/dashboard/DashboardStatsGrid'));
+const CurrentCoursesSection = lazy(() => import('@/components/dashboard/CurrentCoursesSection'));
+const RecentActivitySection = lazy(() => import('@/components/dashboard/RecentActivitySection'));
+const AIChatUsageSection = lazy(() => import('@/components/dashboard/AIChatUsageSection'));
 
 export default function DashboardPage() {
   return (
@@ -21,15 +23,60 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Overview */}
-        <DashboardStatsGrid />
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+                <div className="h-4 bg-slate-700 rounded mb-2"></div>
+                <div className="h-8 bg-slate-700 rounded"></div>
+              </div>
+            ))}
+          </div>
+        }>
+          <DashboardStatsGrid />
+        </Suspense>
 
         {/* Current Courses */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <CurrentCoursesSection />
+          <Suspense fallback={
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-16 bg-slate-700 rounded"></div>
+                ))}
+              </div>
+            </div>
+          }>
+            <CurrentCoursesSection />
+          </Suspense>
 
           <div>
-            <RecentActivitySection />
-            <AIChatUsageSection />
+            <Suspense fallback={
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 mb-4 animate-pulse">
+                <div className="h-6 bg-slate-700 rounded mb-4"></div>
+                <div className="space-y-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-12 bg-slate-700 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            }>
+              <RecentActivitySection />
+            </Suspense>
+            
+            <Suspense fallback={
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+                <div className="h-6 bg-slate-700 rounded mb-4"></div>
+                <div className="space-y-2">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="h-8 bg-slate-700 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            }>
+              <AIChatUsageSection />
+            </Suspense>
           </div>
         </div>
       </main>
