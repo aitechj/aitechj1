@@ -10,6 +10,9 @@ const UserManagementSection = lazy(() => import('@/components/admin/UserManageme
 const CourseManagementSection = lazy(() => import('@/components/admin/CourseManagementSection'));
 const SystemAnalyticsSection = lazy(() => import('@/components/admin/SystemAnalyticsSection'));
 
+import SystemAnalyticsLoadingSkeleton from '@/components/admin/SystemAnalyticsLoadingSkeleton';
+import UserManagementLoadingSkeleton from '@/components/admin/UserManagementLoadingSkeleton';
+
 export default function AdminPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -68,16 +71,7 @@ export default function AdminPage() {
 
         {/* Admin Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Suspense fallback={
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
-              <div className="h-6 bg-slate-700 rounded mb-4"></div>
-              <div className="space-y-3">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="h-16 bg-slate-700 rounded"></div>
-                ))}
-              </div>
-            </div>
-          }>
+          <Suspense fallback={<UserManagementLoadingSkeleton />}>
             <UserManagementSection />
           </Suspense>
           
@@ -96,23 +90,7 @@ export default function AdminPage() {
         </div>
 
         {/* System Analytics */}
-        <Suspense fallback={
-          <div className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
-            <div className="h-6 bg-slate-700 rounded mb-6"></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-slate-700/50 rounded-lg p-4">
-                  <div className="h-4 bg-slate-600 rounded mb-4"></div>
-                  <div className="space-y-2">
-                    {[...Array(4)].map((_, j) => (
-                      <div key={j} className="h-3 bg-slate-600 rounded"></div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        }>
+        <Suspense fallback={<SystemAnalyticsLoadingSkeleton />}>
           <SystemAnalyticsSection />
         </Suspense>
 
