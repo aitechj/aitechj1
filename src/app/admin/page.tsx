@@ -18,6 +18,13 @@ export default function AdminPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const { reportMetrics } = usePerformanceMonitoring();
+  
+  const analyticsRef = useIntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+      }
+    });
+  });
 
   useEffect(() => {
     if (!isLoading) {
@@ -103,12 +110,7 @@ export default function AdminPage() {
         </div>
 
         {/* System Analytics */}
-        <div ref={useIntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-            }
-          });
-        })}>
+        <div ref={analyticsRef}>
           <Suspense fallback={<SystemAnalyticsLoadingSkeleton />}>
             <SystemAnalyticsSection />
           </Suspense>

@@ -12,7 +12,7 @@ const RecentActivitySection = lazy(() => import('@/components/dashboard/RecentAc
 const AIChatUsageSection = lazy(() => import('@/components/dashboard/AIChatUsageSection'));
 
 export default function DashboardPage() {
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const { reportMetrics } = usePerformanceMonitoring();
 
