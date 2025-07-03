@@ -11,10 +11,16 @@ DATABASE_PASSWORD=Techjadmin@1234!@#$
 DATABASE_URL=jdbc:postgresql://your-postgres-host:5432/learning_portal
 ```
 
+### JWT Authentication Secret
+```
+JWT_SECRET=<your-jwt-secret-minimum-32-characters>
+```
+
+**Important**: JWT_SECRET must be at least 32 characters long for security. The application will fail to start if this requirement is not met.
+
 ### Existing Secrets (Keep These)
 ```
 FLY_API_TOKEN=<your-fly-api-token>
-JWT_SECRET=<your-jwt-secret>
 VERCEL_TOKEN=<your-vercel-token>
 VERCEL_ORG_ID=<your-vercel-org-id>
 VERCEL_PROJECT_ID=<your-vercel-project-id>

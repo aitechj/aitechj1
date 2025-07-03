@@ -108,6 +108,7 @@ jobs:
           flyctl secrets set DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" --app aitechj-backend-v2
           flyctl secrets set DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" --app aitechj-backend-v2
           flyctl secrets set DATABASE_URL="${{ secrets.DATABASE_URL }}" --app aitechj-backend-v2
+          flyctl secrets set JWT_SECRET="${{ secrets.JWT_SECRET }}" --app aitechj-backend-v2
           flyctl deploy --app aitechj-backend-v2 --config ./fly.toml --remote-only
         working-directory: ./backend
         env:
