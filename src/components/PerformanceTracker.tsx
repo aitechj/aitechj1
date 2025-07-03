@@ -9,24 +9,30 @@ export default function PerformanceTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    trackPageView(pathname);
+    if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined' && !window.Cypress) {
+      trackPageView(pathname);
+    }
   }, [pathname]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      reportMetrics();
-    }, 3000);
+    if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined' && !window.Cypress) {
+      const timer = setTimeout(() => {
+        reportMetrics();
+      }, 3000);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [reportMetrics, pathname]);
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      reportMetrics();
-    };
+    if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined' && !window.Cypress) {
+      const handleBeforeUnload = () => {
+        reportMetrics();
+      };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
   }, [reportMetrics]);
 
   return null;
