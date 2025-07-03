@@ -40,6 +40,20 @@ process.env.NEXT_PUBLIC_API_URL = 'https://aitechj-backend-v2.fly.dev'
 
 global.fetch = jest.fn()
 
+const originalError = console.error
+beforeAll(() => {
+  console.error = (...args) => {
+    if (typeof args[0] === 'string' && args[0].includes('act(')) {
+      return
+    }
+    originalError.call(console, ...args)
+  }
+})
+
+afterAll(() => {
+  console.error = originalError
+})
+
 beforeEach(() => {
   jest.clearAllMocks()
   if (global.fetch && global.fetch.mockClear) {

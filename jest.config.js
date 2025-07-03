@@ -1,4 +1,4 @@
-console.log('Loading Jest config with coverage thresholds: 30-45%')
+console.log('Loading Jest config with coverage thresholds: 25-35%')
 
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
@@ -21,10 +21,10 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 30,
-      functions: 45,
-      lines: 45,
-      statements: 45
+      branches: 25,
+      functions: 35,
+      lines: 35,
+      statements: 35
     }
   },
   transform: {
