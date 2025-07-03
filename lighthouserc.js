@@ -5,7 +5,7 @@ module.exports = {
       numberOfRuns: 3,
       staticDistDir: '.next',
       settings: {
-        chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-gpu',
+        chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-gpu --headless --disable-web-security --disable-features=VizDisplayCompositor',
         preset: 'desktop',
       },
     },
