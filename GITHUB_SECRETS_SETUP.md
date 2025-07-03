@@ -8,7 +8,7 @@ The following secrets must be configured in the GitHub repository settings for t
 ```
 DATABASE_USERNAME=pgdb-nlkxjo585d4oy93v
 DATABASE_PASSWORD=ypE2fFgZdOpdL4OM9Zm3JsCx
-DATABASE_URL=jdbc:postgresql://direct.nlkxjo585d4oy93v.flympg.net:5432/pgdb-nlkxjo585d4oy93v
+DATABASE_URL=jdbc:postgresql://nlkxjo585d4oy93v.fly.dev:5432/pgdb-nlkxjo585d4oy93v
 ```
 
 ### JWT Authentication Secret
