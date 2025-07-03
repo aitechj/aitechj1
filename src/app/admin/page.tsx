@@ -4,6 +4,7 @@ import { Navigation } from '@/components';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { useEffect, Suspense, lazy } from 'react';
+import { usePerformanceMonitoring, useIntersectionObserver, preloadComponent } from '@/utils/performance';
 
 const AdminStatsGrid = lazy(() => import('@/components/admin/AdminStatsGrid'));
 const UserManagementSection = lazy(() => import('@/components/admin/UserManagementSection'));
@@ -16,6 +17,7 @@ import UserManagementLoadingSkeleton from '@/components/admin/UserManagementLoad
 export default function AdminPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+  const { reportMetrics } = usePerformanceMonitoring();
 
   useEffect(() => {
     if (!isLoading) {
@@ -28,8 +30,19 @@ export default function AdminPage() {
         router.push('/dashboard');
         return;
       }
+
+      preloadComponent(() => import('@/components/admin/SystemAnalyticsSection'));
+      preloadComponent(() => import('@/components/admin/UserManagementSection'));
     }
   }, [isLoading, isAuthenticated, user, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      reportMetrics();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [reportMetrics]);
 
   if (isLoading) {
     return (
@@ -90,9 +103,16 @@ export default function AdminPage() {
         </div>
 
         {/* System Analytics */}
-        <Suspense fallback={<SystemAnalyticsLoadingSkeleton />}>
-          <SystemAnalyticsSection />
-        </Suspense>
+        <div ref={useIntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            }
+          });
+        })}>
+          <Suspense fallback={<SystemAnalyticsLoadingSkeleton />}>
+            <SystemAnalyticsSection />
+          </Suspense>
+        </div>
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">

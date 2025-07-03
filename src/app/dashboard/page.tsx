@@ -1,7 +1,10 @@
 'use client';
 
 import { Navigation } from '@/components';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useRouter } from 'next/navigation';
+import { usePerformanceMonitoring, preloadComponent } from '@/utils/performance';
 
 const DashboardStatsGrid = lazy(() => import('@/components/dashboard/DashboardStatsGrid'));
 const CurrentCoursesSection = lazy(() => import('@/components/dashboard/CurrentCoursesSection'));
@@ -9,6 +12,39 @@ const RecentActivitySection = lazy(() => import('@/components/dashboard/RecentAc
 const AIChatUsageSection = lazy(() => import('@/components/dashboard/AIChatUsageSection'));
 
 export default function DashboardPage() {
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { reportMetrics } = usePerformanceMonitoring();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth');
+    } else if (isAuthenticated) {
+      preloadComponent(() => import('@/components/dashboard/CurrentCoursesSection'));
+      preloadComponent(() => import('@/components/dashboard/RecentActivitySection'));
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      reportMetrics();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [reportMetrics]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       <Navigation currentPage="dashboard" />

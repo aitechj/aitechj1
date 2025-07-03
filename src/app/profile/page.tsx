@@ -4,6 +4,7 @@ import { Navigation } from '@/components';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { useEffect, Suspense, lazy } from 'react';
+import { usePerformanceMonitoring, preloadComponent } from '@/utils/performance';
 
 const ProfileSidebar = lazy(() => import('@/components/profile/ProfileSidebar'));
 const AccountInformationForm = lazy(() => import('@/components/profile/AccountInformationForm'));
@@ -16,12 +17,24 @@ import SubscriptionLoadingSkeleton from '@/components/profile/SubscriptionLoadin
 export default function ProfilePage() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+  const { reportMetrics } = usePerformanceMonitoring();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/');
+    } else if (isAuthenticated) {
+      preloadComponent(() => import('@/components/profile/SubscriptionSection'));
+      preloadComponent(() => import('@/components/profile/LearningPreferencesForm'));
     }
   }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      reportMetrics();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [reportMetrics]);
 
   if (isLoading) {
     return (
