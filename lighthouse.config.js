@@ -3,6 +3,7 @@ module.exports = {
     collect: {
       url: ['http://localhost:3000', 'http://localhost:3000/dashboard', 'http://localhost:3000/admin', 'http://localhost:3000/profile'],
       numberOfRuns: 3,
+      staticDistDir: '.next',
       settings: {
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --disable-gpu',
         preset: 'desktop',
