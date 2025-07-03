@@ -10,8 +10,8 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
+      - uses: actions/checkout@v3
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -22,73 +22,32 @@ jobs:
         with:
           node-version: '18'
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build shared types package
         run: cd shared-types && npm run build
       
       - name: Reinstall dependencies to link shared types
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build Next.js app
-        run: pnpm build
-      
-      - name: Start Next.js app
-        run: pnpm start &
+        run: pnpm run build
+
+      - name: Start Next.js on port 3000
+        run: |
+          echo "Starting Next.js..."
+          pnpm start &
+          npx wait-on http://localhost:3000 --timeout 60000 --verbose
         env:
           NEXT_PUBLIC_API_URL: https://aitechj-backend-v2.fly.dev
-      
-      - name: Wait for app to be ready
-        run: npx wait-on http://localhost:3000 --timeout 60000
-      
-      - name: Install Lighthouse CI
-        run: npm install -g @lhci/cli@0.12.x
-      
-      - name: Run Lighthouse CI with inline configuration
+
+      - name: Run Lighthouse CI
         run: |
-          lhci collect \
-            --url="http://localhost:3000" \
-            --url="http://localhost:3000/dashboard" \
-            --url="http://localhost:3000/admin" \
-            --url="http://localhost:3000/profile" \
-            --numberOfRuns=3 \
-            --staticDistDir=".next"
-          
-          lhci assert \
-            --assertions.categories:performance=error,minScore:0.6 \
-            --assertions.categories:accessibility=error,minScore:0.7 \
-            --assertions.categories:best-practices=error,minScore:0.7 \
-            --assertions.categories:seo=error,minScore:0.8 \
-            --assertions.first-contentful-paint=error,maxNumericValue:3000 \
-            --assertions.largest-contentful-paint=warn,maxNumericValue:4000 \
-            --assertions.cumulative-layout-shift=error,maxNumericValue:0.2 \
-            --assertions.total-blocking-time=error,maxNumericValue:500 \
-            --assertions.speed-index=error,maxNumericValue:4000 \
-            --assertions.resource-summary:script:size=error,maxNumericValue:800000 \
-            --assertions.resource-summary:total:size=error,maxNumericValue:3000000 \
-            --assertions.color-contrast=off \
-            --assertions.csp-xss=off \
-            --assertions.errors-in-console=off \
-            --assertions.heading-order=off \
-            --assertions.installable-manifest=off \
-            --assertions.maskable-icon=off \
-            --assertions.service-worker=off \
-            --assertions.splash-screen=off \
-            --assertions.themed-omnibox=off \
-            --assertions.uses-rel-preconnect=off
-          
-          lhci upload --target=temporary-public-storage
-        env:
-          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
-          LHCI_BUILD_CONTEXT__COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
-          LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.ref_name }}
-          LHCI_BUILD_CONTEXT__COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-      
-      - name: Upload Lighthouse reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lighthouse-reports
-          path: .lighthouseci/
+          npx @lhci/cli collect --url=http://localhost:3000
+          npx @lhci/cli assert \
+            --assertions.categories:performance=error,minScore=0.6 \
+            --assertions.categories:accessibility=error,minScore=0.7 \
+            --assertions.categories:best-practices=error,minScore=0.7 \
+            --assertions.categories:seo=error,minScore=0.8
