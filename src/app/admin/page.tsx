@@ -4,7 +4,7 @@ import { Navigation } from '@/components';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { useEffect, Suspense, lazy } from 'react';
-import { usePerformanceMonitoring, useIntersectionObserver, preloadComponent } from '@/utils/performance';
+import { usePerformanceMonitoring, useIntersectionObserver, roleBasedPreload } from '@/utils/performance';
 
 const AdminStatsGrid = lazy(() => import('@/components/admin/AdminStatsGrid'));
 const UserManagementSection = lazy(() => import('@/components/admin/UserManagementSection'));
@@ -38,8 +38,9 @@ export default function AdminPage() {
         return;
       }
 
-      preloadComponent(() => import('@/components/admin/SystemAnalyticsSection'));
-      preloadComponent(() => import('@/components/admin/UserManagementSection'));
+      roleBasedPreload(user?.role, 'admin', () => import('@/components/admin/SystemAnalyticsSection'));
+      roleBasedPreload(user?.role, 'admin', () => import('@/components/admin/UserManagementSection'));
+      roleBasedPreload(user?.role, 'admin', () => import('@/components/admin/CourseManagementSection'));
     }
   }, [isLoading, isAuthenticated, user, router]);
 

@@ -103,3 +103,22 @@ export const preloadComponent = (importFn: () => Promise<unknown>) => {
     }
   }
 };
+
+export const conditionalPreload = (
+  condition: boolean,
+  importFn: () => Promise<unknown>
+) => {
+  if (condition) {
+    preloadComponent(importFn);
+  }
+};
+
+export const roleBasedPreload = (
+  userRole: string | undefined,
+  requiredRole: string,
+  importFn: () => Promise<unknown>
+) => {
+  if (userRole === requiredRole) {
+    preloadComponent(importFn);
+  }
+};
