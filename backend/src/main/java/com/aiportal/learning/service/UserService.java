@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -51,5 +52,9 @@ public class UserService implements UserDetailsService {
         }
         
         userRepository.delete(user);
+    }
+    
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
