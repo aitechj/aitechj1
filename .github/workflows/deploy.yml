@@ -41,6 +41,11 @@ jobs:
       - name: Run tests
         run: pnpm run test
 
+      - name: Check bundle size
+        run: node scripts/bundle-size-check.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-frontend:
     needs: test
     runs-on: ubuntu-latest

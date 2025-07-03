@@ -64,6 +64,15 @@ export const usePerformanceMonitoring = () => {
     console.log('Performance Metrics:', metrics);
     
     if (process.env.NODE_ENV === 'production') {
+      sendToAnalytics({
+        ...metrics,
+        userAgent: navigator.userAgent,
+        connectionType: (navigator as unknown as { connection?: { effectiveType?: string } }).connection?.effectiveType,
+        timestamp: Date.now(),
+        url: window.location.pathname,
+        userId: getUserId(),
+        sessionId: getSessionId()
+      });
     }
   };
 
@@ -120,5 +129,61 @@ export const roleBasedPreload = (
 ) => {
   if (userRole === requiredRole) {
     preloadComponent(importFn);
+  }
+};
+
+export interface UserContext {
+  userAgent: string;
+  connectionType?: string;
+  timestamp: number;
+  url: string;
+  userId: string;
+  sessionId: string;
+}
+
+export const sendToAnalytics = (data: PerformanceMetrics & UserContext) => {
+  if (typeof window !== 'undefined' && 'navigator' in window && 'sendBeacon' in navigator) {
+    try {
+      navigator.sendBeacon('/api/analytics/performance', JSON.stringify(data));
+    } catch (error) {
+      console.warn('Failed to send analytics data:', error);
+    }
+  }
+};
+
+export const getUserId = () => {
+  if (typeof window === 'undefined') return 'server';
+  return localStorage.getItem('userId') || 'anonymous';
+};
+
+export const getSessionId = () => {
+  if (typeof window === 'undefined') return 'server-session';
+  let sessionId = sessionStorage.getItem('sessionId');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem('sessionId', sessionId);
+  }
+  return sessionId;
+};
+
+export const trackPageView = (pageName: string, additionalData?: Record<string, unknown>) => {
+  if (process.env.NODE_ENV === 'production') {
+    const data = {
+      event: 'page_view',
+      page: pageName,
+      timestamp: Date.now(),
+      url: typeof window !== 'undefined' ? window.location.pathname : '',
+      userId: getUserId(),
+      sessionId: getSessionId(),
+      ...additionalData
+    };
+    
+    if (typeof window !== 'undefined' && 'navigator' in window && 'sendBeacon' in navigator) {
+      try {
+        navigator.sendBeacon('/api/analytics/pageview', JSON.stringify(data));
+      } catch (error) {
+        console.warn('Failed to send page view data:', error);
+      }
+    }
   }
 };

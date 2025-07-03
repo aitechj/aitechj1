@@ -10,6 +10,7 @@ const AdminStatsGrid = lazy(() => import('@/components/admin/AdminStatsGrid'));
 const UserManagementSection = lazy(() => import('@/components/admin/UserManagementSection'));
 const CourseManagementSection = lazy(() => import('@/components/admin/CourseManagementSection'));
 const SystemAnalyticsSection = lazy(() => import('@/components/admin/SystemAnalyticsSection'));
+const PerformanceMonitoringSection = lazy(() => import('@/components/admin/PerformanceMonitoringSection'));
 
 import SystemAnalyticsLoadingSkeleton from '@/components/admin/SystemAnalyticsLoadingSkeleton';
 import UserManagementLoadingSkeleton from '@/components/admin/UserManagementLoadingSkeleton';
@@ -116,6 +117,21 @@ export default function AdminPage() {
             <SystemAnalyticsSection />
           </Suspense>
         </div>
+
+        {/* Performance Monitoring */}
+        <Suspense fallback={
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+            <div className="h-6 bg-slate-700 rounded mb-4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-20 bg-slate-700 rounded"></div>
+              ))}
+            </div>
+            <div className="h-40 bg-slate-700 rounded"></div>
+          </div>
+        }>
+          <PerformanceMonitoringSection />
+        </Suspense>
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">

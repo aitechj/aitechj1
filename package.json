@@ -13,7 +13,11 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-    "test:all": "pnpm test && pnpm test:e2e"
+    "test:all": "pnpm test && pnpm test:e2e",
+    "performance:test": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "performance:ci": "lhci autorun",
+    "bundle:check": "node scripts/bundle-size-check.js",
+    "bundle:monitor": "pnpm run build:analyze && open .next/bundle-analyzer-report.html"
   },
   "dependencies": {
     "@aitechj/shared-types": "file:./shared-types",
@@ -43,6 +47,7 @@
     "ts-jest": "^29.1.1",
     "typescript": "^5",
     "wait-on": "^8.0.3",
-    "webpack-bundle-analyzer": "^4.10.1"
+    "webpack-bundle-analyzer": "^4.10.1",
+    "@lhci/cli": "^0.12.0"
   }
 }
