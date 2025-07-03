@@ -71,7 +71,7 @@ public class EnrollmentController {
             Enrollment enrollment = enrollmentService.updateProgress(id, request.getProgressPercentage());
             
             if (!enrollment.getUser().getId().equals(user.getId())) {
-                return ResponseEntity.forbidden().build();
+                return ResponseEntity.status(403).build();
             }
             
             return ResponseEntity.ok(new EnrollmentDto(enrollment));
