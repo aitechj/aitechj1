@@ -49,7 +49,7 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           lhci collect --url="http://localhost:3000" --url="http://localhost:3000/dashboard" --url="http://localhost:3000/admin" --url="http://localhost:3000/profile" --numberOfRuns=3
-          lhci assert --preset=lighthouse:recommended
+          lhci assert
           lhci upload --target=temporary-public-storage
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
