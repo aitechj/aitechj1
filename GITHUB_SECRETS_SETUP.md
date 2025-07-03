@@ -6,9 +6,9 @@ The following secrets must be configured in the GitHub repository settings for t
 
 ### PostgreSQL Database Secrets
 ```
-DATABASE_USERNAME=aitechj-db-pswd
-DATABASE_PASSWORD=Techjadmin@1234!@#$
-DATABASE_URL=jdbc:postgresql://aitechj-postgres.flycast:5432/learning_portal
+DATABASE_USERNAME=pgdb-nlkxjo585d4oy93v
+DATABASE_PASSWORD=ypE2fFgZdOpdL4OM9Zm3JsCx
+DATABASE_URL=jdbc:postgresql://direct.nlkxjo585d4oy93v.flympg.net:5432/pgdb-nlkxjo585d4oy93v
 ```
 
 ### JWT Authentication Secret
