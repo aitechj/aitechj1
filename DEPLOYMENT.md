@@ -38,7 +38,7 @@
 ### Backend Configuration
 
 - **URL**: https://aitechj-backend-v2.fly.dev/
-- **Database**: H2 file-based with persistent volume at `/data`
+- **Database**: PostgreSQL managed database instance
 - **Health Check**: Port 8080, endpoint `/actuator/health`
 - **Environment**: Production with JWT authentication
 
@@ -93,8 +93,8 @@ The frontend is configured to use the Fly.io backend URL via `vercel.json`:
 - Check that `target/*.jar` file exists in the backend directory
 
 **Database Issues**:
-- H2 database files are persisted in `/data` volume
-- Database will be created automatically on first run
+- PostgreSQL database connection configured via DATABASE_URL environment variable
+- Database schema will be created automatically on first run via Hibernate DDL
 
 **Deployment Timeout Failures**:
 - Spring Boot applications take 12+ seconds to start, which can cause deployment timeouts
@@ -147,5 +147,5 @@ The repository includes automated workflows for:
 - JWT tokens are used for authentication
 - Passwords are hashed using BCrypt
 - CORS is configured to allow frontend domain
-- H2 console is disabled in production
+- PostgreSQL database provides production-grade data persistence and performance
 - All endpoints require proper authentication except registration and login
