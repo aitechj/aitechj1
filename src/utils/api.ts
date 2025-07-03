@@ -3,7 +3,18 @@ import {
   LoginRequest, 
   RegisterRequest, 
   User, 
-  AuthResponse 
+  AuthResponse,
+  Course,
+  Enrollment,
+  ChatMessage,
+  UserPreferences,
+  DashboardStats,
+  AdminStats,
+  CourseRequest,
+  EnrollmentRequest,
+  ChatMessageRequest,
+  UserPreferencesRequest,
+  UserProfileRequest
 } from '@/types';
 
 const API_BASE_URL = typeof window !== 'undefined' 
@@ -46,14 +57,14 @@ class ApiClient {
     return this.request<T>(endpoint, { method: 'GET' });
   }
 
-  async post<T>(endpoint: string, body: Record<string, unknown>): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, body: Record<string, unknown> | unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(body),
     });
   }
 
-  async put<T>(endpoint: string, body: Record<string, unknown>): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body: Record<string, unknown> | unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: JSON.stringify(body),
@@ -80,4 +91,80 @@ export const authApi = {
   
   logout: () => 
     apiClient.post<void>('/api/auth/logout', {}),
+};
+
+export const coursesApi = {
+  getAll: () => 
+    apiClient.get<Course[]>('/api/courses'),
+  
+  getById: (id: string) => 
+    apiClient.get<Course>(`/api/courses/${id}`),
+  
+  create: (courseData: CourseRequest) => 
+    apiClient.post<Course>('/api/courses', courseData),
+  
+  update: (id: string, courseData: CourseRequest) => 
+    apiClient.put<Course>(`/api/courses/${id}`, courseData),
+  
+  delete: (id: string) => 
+    apiClient.delete<void>(`/api/courses/${id}`),
+};
+
+export const enrollmentsApi = {
+  getAll: () => 
+    apiClient.get<Enrollment[]>('/api/enrollments'),
+  
+  enroll: (enrollmentData: EnrollmentRequest) => 
+    apiClient.post<Enrollment>('/api/enrollments', enrollmentData),
+  
+  updateProgress: (id: string, progressData: EnrollmentRequest) => 
+    apiClient.put<Enrollment>(`/api/enrollments/${id}/progress`, progressData),
+};
+
+export const dashboardApi = {
+  getStats: () => 
+    apiClient.get<DashboardStats>('/api/dashboard/stats'),
+  
+  getCurrentCourses: () => 
+    apiClient.get<Enrollment[]>('/api/dashboard/courses'),
+};
+
+export const profileApi = {
+  update: (profileData: UserProfileRequest) => 
+    apiClient.put<User>('/api/profile', profileData),
+  
+  getPreferences: () => 
+    apiClient.get<UserPreferences>('/api/profile/preferences'),
+  
+  updatePreferences: (preferencesData: UserPreferencesRequest) => 
+    apiClient.put<UserPreferences>('/api/profile/preferences', preferencesData),
+};
+
+export const adminApi = {
+  getStats: () => 
+    apiClient.get<AdminStats>('/api/admin/stats'),
+  
+  getUsers: () => 
+    apiClient.get<User[]>('/api/admin/users'),
+};
+
+export const chatApi = {
+  sendMessage: (messageData: ChatMessageRequest) => 
+    apiClient.post<ChatMessage>('/api/chat/message', messageData),
+  
+  getHistory: () => 
+    apiClient.get<ChatMessage[]>('/api/chat/history'),
+  
+  getUsage: () => 
+    apiClient.get<number>('/api/chat/usage'),
+};
+
+export const api = {
+  auth: authApi,
+  courses: coursesApi,
+  enrollments: enrollmentsApi,
+  dashboard: dashboardApi,
+  profile: profileApi,
+  admin: adminApi,
+  chat: chatApi,
 };
