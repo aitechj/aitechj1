@@ -32,7 +32,10 @@ export const usePerformanceMonitoring = () => {
             metricsRef.current.fid = fidEntry.processingStart - fidEntry.startTime;
             break;
           case 'layout-shift':
-            const clsEntry = entry as any; // LayoutShift API not fully typed in TypeScript
+            const clsEntry = entry as PerformanceEntry & {
+              hadRecentInput: boolean;
+              value: number;
+            };
             if (!clsEntry.hadRecentInput) {
               metricsRef.current.cls = (metricsRef.current.cls || 0) + clsEntry.value;
             }
@@ -91,7 +94,7 @@ export const useIntersectionObserver = (
   return targetRef;
 };
 
-export const preloadComponent = (importFn: () => Promise<any>) => {
+export const preloadComponent = (importFn: () => Promise<unknown>) => {
   if (typeof window !== 'undefined') {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => importFn());
