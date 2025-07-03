@@ -47,7 +47,20 @@ jobs:
         run: npm install -g @lhci/cli@0.12.x
       
       - name: Run Lighthouse CI
-        run: lhci autorun
+        run: |
+          lhci autorun \
+            --collect.url="http://localhost:3000" \
+            --collect.url="http://localhost:3000/dashboard" \
+            --collect.url="http://localhost:3000/admin" \
+            --collect.url="http://localhost:3000/profile" \
+            --collect.numberOfRuns=3 \
+            --collect.staticDistDir=".next" \
+            --collect.settings.chromeFlags="--no-sandbox --disable-dev-shm-usage --disable-gpu --headless --disable-web-security --disable-features=VizDisplayCompositor" \
+            --assert.assertions.categories:performance=error,minScore:0.8 \
+            --assert.assertions.categories:accessibility=error,minScore:0.9 \
+            --assert.assertions.first-contentful-paint=error,maxNumericValue:2000 \
+            --assert.assertions.largest-contentful-paint=error,maxNumericValue:3000 \
+            --upload.target=temporary-public-storage
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
           LHCI_BUILD_CONTEXT__COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
