@@ -44,3 +44,4 @@ logging:
   level:
     com.aiportal.learning: INFO
     org.springframework.security: WARN
+    org.springframework.boot: INFO
