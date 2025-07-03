@@ -3,17 +3,21 @@
 import { Navigation } from '@/components';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { 
-  AdminStatsGrid, 
-  UserManagementSection, 
-  CourseManagementSection, 
-  SystemAnalyticsSection 
-} from '@/components/admin';
+import { useEffect, Suspense, lazy } from 'react';
+import { usePerformanceMonitoring, useIntersectionObserver, preloadComponent } from '@/utils/performance';
+
+const AdminStatsGrid = lazy(() => import('@/components/admin/AdminStatsGrid'));
+const UserManagementSection = lazy(() => import('@/components/admin/UserManagementSection'));
+const CourseManagementSection = lazy(() => import('@/components/admin/CourseManagementSection'));
+const SystemAnalyticsSection = lazy(() => import('@/components/admin/SystemAnalyticsSection'));
+
+import SystemAnalyticsLoadingSkeleton from '@/components/admin/SystemAnalyticsLoadingSkeleton';
+import UserManagementLoadingSkeleton from '@/components/admin/UserManagementLoadingSkeleton';
 
 export default function AdminPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+  const { reportMetrics } = usePerformanceMonitoring();
 
   useEffect(() => {
     if (!isLoading) {
@@ -26,8 +30,19 @@ export default function AdminPage() {
         router.push('/dashboard');
         return;
       }
+
+      preloadComponent(() => import('@/components/admin/SystemAnalyticsSection'));
+      preloadComponent(() => import('@/components/admin/UserManagementSection'));
     }
   }, [isLoading, isAuthenticated, user, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      reportMetrics();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [reportMetrics]);
 
   if (isLoading) {
     return (
@@ -54,16 +69,50 @@ export default function AdminPage() {
         </div>
 
         {/* Admin Stats */}
-        <AdminStatsGrid />
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+                <div className="h-4 bg-slate-700 rounded mb-2"></div>
+                <div className="h-8 bg-slate-700 rounded"></div>
+              </div>
+            ))}
+          </div>
+        }>
+          <AdminStatsGrid />
+        </Suspense>
 
         {/* Admin Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <UserManagementSection />
-          <CourseManagementSection />
+          <Suspense fallback={<UserManagementLoadingSkeleton />}>
+            <UserManagementSection />
+          </Suspense>
+          
+          <Suspense fallback={
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-6 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-16 bg-slate-700 rounded"></div>
+                ))}
+              </div>
+            </div>
+          }>
+            <CourseManagementSection />
+          </Suspense>
         </div>
 
         {/* System Analytics */}
-        <SystemAnalyticsSection />
+        <div ref={useIntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            }
+          });
+        })}>
+          <Suspense fallback={<SystemAnalyticsLoadingSkeleton />}>
+            <SystemAnalyticsSection />
+          </Suspense>
+        </div>
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
