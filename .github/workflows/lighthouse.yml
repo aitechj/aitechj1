@@ -53,7 +53,9 @@ jobs:
 
       - name: Run Lighthouse CI
         run: |
-          lhci autorun --config=lighthouserc.js
+          pwd
+          ls -la lighthouserc.js
+          lhci autorun --config=$PWD/lighthouserc.js
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
           LHCI_BUILD_CONTEXT__COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
