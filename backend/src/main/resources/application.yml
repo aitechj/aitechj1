@@ -7,10 +7,8 @@ spring:
     name: ai-learning-portal
   
   datasource:
-    url: jdbc:${DATABASE_URL:postgresql://localhost:5432/learning_portal}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/learning_portal}
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
   
   jpa:
     hibernate:

@@ -9,7 +9,7 @@ primary_region = 'syd'
 
 [env]
   PORT = '8080'
-  SPRING_PROFILES_ACTIVE = 'production'
+  SPRING_PROFILES_ACTIVE = 'fly'
 
 
 [http_service]
