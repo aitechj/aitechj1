@@ -36,3 +36,4 @@ logging:
     com.zaxxer.hikari: DEBUG
     org.postgresql: DEBUG
 # Force deployment with DATABASE_URL format fix - Fri Jul  4 09:35:00 UTC 2025
+# Force CI deployment - Fri Jul  4 13:44:10 UTC 2025
