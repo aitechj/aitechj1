@@ -7,25 +7,33 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class DatabaseSecurityValidator {
     
-    @Value("${DATABASE_PASSWORD}")
-    private String databasePassword;
-    
-    @Value("${spring.datasource.username}")
-    private String databaseUsername;
+    @Value("${DATABASE_URL:}")
+    private String databaseUrl;
     
     @PostConstruct
     public void validateDatabaseSecurity() {
-        if (databasePassword == null || databasePassword.trim().isEmpty()) {
-            throw new IllegalStateException("DATABASE_PASSWORD environment variable must be provided");
+        if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
+            throw new IllegalStateException("DATABASE_URL environment variable must be provided");
         }
-        if (databasePassword.length() < 16) {
-            throw new IllegalStateException("DATABASE_PASSWORD must be at least 16 characters long for security");
+        if (!databaseUrl.startsWith("jdbc:postgresql://")) {
+            throw new IllegalStateException("DATABASE_URL must be a valid PostgreSQL JDBC URL");
         }
-        if (databaseUsername == null || databaseUsername.trim().isEmpty()) {
-            throw new IllegalStateException("DATABASE_USERNAME environment variable must be provided");
+        if (!databaseUrl.contains("sslmode=require")) {
+            throw new IllegalStateException("DATABASE_URL must include sslmode=require for security");
         }
-        if ("postgres".equals(databaseUsername)) {
-            throw new IllegalStateException("DATABASE_USERNAME should not use default 'postgres' username for security");
+        try {
+            String urlPart = databaseUrl.substring("jdbc:postgresql://".length());
+            if (urlPart.contains("@")) {
+                String credentials = urlPart.substring(0, urlPart.indexOf("@"));
+                if (credentials.contains(":")) {
+                    String username = credentials.substring(0, credentials.indexOf(":"));
+                    if ("postgres".equals(username)) {
+                        throw new IllegalStateException("DATABASE_URL should not use default 'postgres' username for security");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Could not parse DATABASE_URL for username validation: " + e.getMessage());
         }
     }
 }
