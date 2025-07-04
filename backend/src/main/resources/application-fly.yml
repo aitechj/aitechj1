@@ -1,3 +1,4 @@
+# Fly.io specific configuration for PostgreSQL deployment
 spring:
   datasource:
     url: ${DATABASE_URL}
