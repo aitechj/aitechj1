@@ -28,8 +28,11 @@ spring:
 
 logging:
   level:
-    com.aiportal.learning: INFO
+    com.aiportal.learning: DEBUG
     org.springframework.security: WARN
-    org.hibernate: WARN
+    org.hibernate: DEBUG
     org.springframework.web: WARN
+    org.springframework.jdbc: DEBUG
+    com.zaxxer.hikari: DEBUG
+    org.postgresql: DEBUG
 # Force deployment with DATABASE_URL format fix - Fri Jul  4 09:35:00 UTC 2025

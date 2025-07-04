@@ -15,6 +15,10 @@ public class DatabaseSecurityValidator {
         if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
             throw new IllegalStateException("DATABASE_URL environment variable must be provided");
         }
+        
+        String maskedUrl = databaseUrl.replaceAll("://[^@]+@", "://***:***@");
+        System.out.println("DATABASE_URL format check: " + maskedUrl);
+        
         if (!databaseUrl.startsWith("jdbc:postgresql://")) {
             throw new IllegalStateException("DATABASE_URL must be a valid PostgreSQL JDBC URL");
         }
@@ -30,10 +34,13 @@ public class DatabaseSecurityValidator {
                     if ("postgres".equals(username)) {
                         throw new IllegalStateException("DATABASE_URL should not use default 'postgres' username for security");
                     }
+                    System.out.println("Database username validation passed for user: " + username);
                 }
             }
         } catch (Exception e) {
             System.out.println("Warning: Could not parse DATABASE_URL for username validation: " + e.getMessage());
         }
+        
+        System.out.println("DatabaseSecurityValidator: All validations passed");
     }
 }
