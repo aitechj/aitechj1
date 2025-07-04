@@ -28,3 +28,4 @@ logging:
     org.springframework.security: WARN
     org.hibernate: WARN
     org.springframework.web: WARN
+# Force deployment with server binding fix - Fri Jul  4 07:57:05 UTC 2025
