@@ -1,4 +1,12 @@
-# Database Security Configuration
+# Database Security Configuration (DEPRECATED)
+
+**⚠️ DEPRECATED: This document describes the old H2 database configuration that has been replaced with PostgreSQL.**
+
+**Current Configuration:** The application now uses PostgreSQL with a single `DATABASE_URL` environment variable containing embedded credentials. See [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) for current requirements.
+
+---
+
+## Legacy H2 Configuration (For Reference Only)
 
 ## Overview
 This document outlines the database security improvements implemented to address critical H2 database vulnerabilities.

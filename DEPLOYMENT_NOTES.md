@@ -1,32 +1,46 @@
-# Critical Backend Fix Required
+# Backend Deployment Status
 
-## Database Secrets Missing from Fly.io
+## Current Configuration (Updated July 2025)
 
-The backend at `aitechj-backend-v2.fly.dev` is returning 403 errors because the following environment variables are not deployed:
+The backend now uses PostgreSQL with simplified configuration:
 
-- `DATABASE_USERNAME` (must not be 'sa', minimum security requirement)
-- `DATABASE_FILE_PASSWORD` (minimum 16 characters)
-- `DATABASE_USER_PASSWORD` (minimum 16 characters)
+- `DATABASE_URL` - PostgreSQL connection string with embedded credentials
+- `JWT_SECRET` - Authentication token signing key
+
+## Legacy H2 Configuration (DEPRECATED)
+
+The following secrets are **no longer used** and should be removed from Fly.io:
+
+- `DATABASE_USERNAME` - Now embedded in DATABASE_URL
+- `DATABASE_FILE_PASSWORD` - Old H2 database secret (REMOVE)
+- `DATABASE_USER_PASSWORD` - Old H2 database secret (REMOVE)
+- `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
 
 ## Required Action
 
-Deploy these secrets to Fly.io using:
+Remove deprecated secrets from Fly.io:
 
 ```bash
-flyctl secrets set DATABASE_USERNAME=<secure_username> -a aitechj-backend-v2
-flyctl secrets set DATABASE_FILE_PASSWORD=<16+_char_password> -a aitechj-backend-v2  
-flyctl secrets set DATABASE_USER_PASSWORD=<16+_char_password> -a aitechj-backend-v2
+flyctl secrets unset DATABASE_FILE_PASSWORD -a aitechj-backend-v2
+flyctl secrets unset DATABASE_USER_PASSWORD -a aitechj-backend-v2
+flyctl secrets unset DATABASE_USERNAME -a aitechj-backend-v2
+flyctl secrets unset DATABASE_PASSWORD -a aitechj-backend-v2
 ```
 
-After deployment, restart the machines to pick up the new secrets.
+Ensure only these secrets are set:
+
+```bash
+flyctl secrets set DATABASE_URL="<postgresql-connection-string>" -a aitechj-backend-v2
+flyctl secrets set JWT_SECRET="<jwt-secret>" -a aitechj-backend-v2
+```
 
 ## Verification
 
-Once deployed, verify the backend health:
+After removing deprecated secrets, verify the backend health:
 
 ```bash
 curl https://aitechj-backend-v2.fly.dev/actuator/health
-# Should return 200 OK
+# Should return 200 OK with PostgreSQL connection
 
 curl https://aitechj-backend-v2.fly.dev/api/auth/login
 # Should return 401 Unauthorized (not 403 Forbidden)
