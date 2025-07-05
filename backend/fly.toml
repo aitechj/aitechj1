@@ -35,3 +35,4 @@ primary_region = 'syd'
   memory = '2gb'
   cpu_kind = 'shared'
   cpus = 1
+# Trigger deployment after fly.toml environment variable fix - Sat Jul  5 09:55:26 UTC 2025
