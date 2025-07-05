@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    url: ${JDBC_URL:jdbc:postgresql://direct.nlkxjo585d4oy93v.flympg.net:5432/pgdb-nlkxjo585d4oy93v?sslmode=require}
-    username: ${DB_USERNAME:pgdb-nlkxjo585d4oy93v}
-    password: ${DB_PASSWORD:ypE2fFgZdOpdL4OM9Zm3JsCx}
+    url: ${JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -36,3 +36,4 @@ logging:
     org.springframework.web: WARN
 # Force deployment with server binding fix - Fri Jul  4 07:57:05 UTC 2025
 # Trigger CI to verify e2e-tests pass with corrected backend - Fri Jul  4 15:36:19 UTC 2025
+# Trigger deployment with GitHub secrets - Sat Jul  5 09:22:33 UTC 2025
