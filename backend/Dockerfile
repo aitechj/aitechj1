@@ -1,5 +1,7 @@
 FROM openjdk:17-jdk-slim
 
+ENV PATH="/usr/local/openjdk-17/bin:$PATH"
+
 WORKDIR /app
 
 COPY target/*.jar app.jar
