@@ -7,7 +7,7 @@ This document provides a comprehensive low-level technical assessment of the ait
 **Technology Stack:**
 - Frontend: Next.js 15.3.4 + React 19 + TypeScript 5 + Tailwind CSS 4
 - Backend: Spring Boot 3.2.0 + Java 17 + Spring Security + JWT
-- Database: H2 (file-based)
+- Database: PostgreSQL
 - Deployment: Vercel (frontend) + Fly.io (backend)
 
 ---
@@ -332,20 +332,20 @@ const login = async (credentials: LoginRequest) => {
 
 ### 4.3 Database Security Issues
 
-**H2 Database Configuration:**
+**PostgreSQL Database Configuration:**
 ```yaml
 # application.yml:9-23
 datasource:
-  url: jdbc:h2:file:./data/learning;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
-  username: sa
-  password:  # Empty password
+  url: ${JDBC_URL:jdbc:postgresql://localhost:5432/learning_portal}
+  username: ${DB_USERNAME:postgres}
+  password: ${DB_PASSWORD:password}
+  driver-class-name: org.postgresql.Driver
 ```
 
 **Issues:**
-- Empty database password
-- File-based database in production
-- H2 console disabled but configuration still vulnerable
-- No connection encryption
+- Default credentials in development configuration
+- Connection security depends on proper SSL configuration
+- Environment variable validation required for production
 
 ---
 
@@ -414,8 +414,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 **Issues:**
 - No database indexing strategy
 - Missing query optimization
-- No connection pooling configuration
-- File-based H2 database performance limitations
+- Basic connection pooling configuration
+- PostgreSQL performance tuning needed
 
 #### **Service Layer Performance**
 
@@ -566,7 +566,7 @@ private baseURL = 'https://aitechj-backend-v2.fly.dev';
 2. **Missing Validation**: No bean validation beyond starter
 3. **No Caching**: Missing Redis or Caffeine for performance
 4. **No Monitoring**: Missing Micrometer for metrics
-5. **H2 Database**: Not suitable for production
+5. **Database Optimization**: PostgreSQL performance tuning needed
 
 #### **Security Dependencies**
 

@@ -12,8 +12,6 @@ The backend now uses PostgreSQL with simplified configuration:
 The following secrets are **no longer used** and should be removed from Fly.io:
 
 - `DATABASE_USERNAME` - Now embedded in DATABASE_URL
-- `DATABASE_FILE_PASSWORD` - Old H2 database secret (REMOVE)
-- `DATABASE_USER_PASSWORD` - Old H2 database secret (REMOVE)
 - `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
 
 ## Required Action
@@ -21,8 +19,6 @@ The following secrets are **no longer used** and should be removed from Fly.io:
 Remove deprecated secrets from Fly.io:
 
 ```bash
-flyctl secrets unset DATABASE_FILE_PASSWORD -a aitechj-backend-v2
-flyctl secrets unset DATABASE_USER_PASSWORD -a aitechj-backend-v2
 flyctl secrets unset DATABASE_USERNAME -a aitechj-backend-v2
 flyctl secrets unset DATABASE_PASSWORD -a aitechj-backend-v2
 ```
