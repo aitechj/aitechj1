@@ -38,7 +38,7 @@
 ### Backend Configuration
 
 - **URL**: https://aitechj-backend-v2.fly.dev/
-- **Database**: H2 file-based with persistent volume at `/data`
+- **Database**: PostgreSQL with SSL connection
 - **Health Check**: Port 8080, endpoint `/actuator/health`
 - **Environment**: Production with JWT authentication
 

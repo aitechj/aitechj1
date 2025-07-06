@@ -49,15 +49,11 @@ VERCEL_PROJECT_ID=<your-vercel-project-id>
 - `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
 
 ### Fly.io App Secrets to Remove:
-- `DATABASE_FILE_PASSWORD` - Old H2 database secret (CAUSES STARTUP ERROR)
-- `DATABASE_USER_PASSWORD` - Old H2 database secret (CAUSES STARTUP ERROR)
 - `DATABASE_USERNAME` - Now embedded in DATABASE_URL
 - `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
 
 **Commands to remove Fly.io secrets:**
 ```bash
-flyctl secrets unset DATABASE_FILE_PASSWORD -a aitechj-backend-v2
-flyctl secrets unset DATABASE_USER_PASSWORD -a aitechj-backend-v2
 flyctl secrets unset DATABASE_USERNAME -a aitechj-backend-v2
 flyctl secrets unset DATABASE_PASSWORD -a aitechj-backend-v2
 ```
