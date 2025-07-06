@@ -8,10 +8,12 @@ The following secrets must be configured in the GitHub repository settings for t
 
 #### PostgreSQL Database Connection
 ```
-DATABASE_URL=jdbc:postgresql://direct.nlkxjo585d4oy93v.flympg.net:5432/pgdb-nlkxjo585d4oy93v?sslmode=require
+JDBC_URL=jdbc:postgresql://hostname:port/database?sslmode=require
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
 ```
 
-**Note**: DATABASE_URL contains embedded credentials. Separate DATABASE_USERNAME and DATABASE_PASSWORD are no longer used.
+**Note**: Uses separate JDBC_URL, DB_USERNAME, and DB_PASSWORD variables as required by DatabaseSecurityValidator.
 
 #### JWT Authentication Secret
 ```
@@ -44,19 +46,17 @@ VERCEL_PROJECT_ID=<your-vercel-project-id>
 
 **CRITICAL:** Remove these deprecated secrets from both GitHub repository settings and Fly.io app secrets:
 
-### GitHub Repository Secrets to Remove:
-- `DATABASE_USERNAME` - Now embedded in DATABASE_URL
-- `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
+### GitHub Repository Secrets Required:
+- `JDBC_URL` - PostgreSQL JDBC URL without embedded credentials
+- `DB_USERNAME` - Database username
+- `DB_PASSWORD` - Database password
 
-### Fly.io App Secrets to Remove:
-- `DATABASE_USERNAME` - Now embedded in DATABASE_URL
-- `DATABASE_PASSWORD` - Now embedded in DATABASE_URL
+### Fly.io App Secrets Required:
+- `JDBC_URL` - PostgreSQL JDBC URL without embedded credentials  
+- `DB_USERNAME` - Database username
+- `DB_PASSWORD` - Database password
 
-**Commands to remove Fly.io secrets:**
-```bash
-flyctl secrets unset DATABASE_USERNAME -a aitechj-backend-v2
-flyctl secrets unset DATABASE_PASSWORD -a aitechj-backend-v2
-```
+**Note**: These secrets must match between GitHub and Fly.io for deployment to work correctly.
 
 ## Verification
 
@@ -76,11 +76,9 @@ After adding the secrets, the GitHub Actions deployment workflow should succeed.
 ## Secret Usage Summary
 
 **Currently Used:**
-- DATABASE_URL (backend database connection with embedded credentials)
+- JDBC_URL (PostgreSQL JDBC URL without embedded credentials)
+- DB_USERNAME (database username)
+- DB_PASSWORD (database password)
 - JWT_SECRET (authentication token signing)
 - FLY_API_TOKEN (backend deployment to Fly.io)
 - VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID (frontend deployment to Vercel)
-
-**No Longer Used:**
-- DATABASE_USERNAME (embedded in DATABASE_URL)
-- DATABASE_PASSWORD (embedded in DATABASE_URL)
