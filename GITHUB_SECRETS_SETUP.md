@@ -9,11 +9,11 @@ The following secrets must be configured in the GitHub repository settings for t
 #### PostgreSQL Database Connection
 ```
 JDBC_URL=jdbc:postgresql://hostname:port/database?sslmode=require
-DB_USERNAME=your_database_username
-DB_PASSWORD=your_database_password
+DATABASE_USERNAME=your_database_username
+DATABASE_PASSWORD=your_database_password
 ```
 
-**Note**: Uses separate JDBC_URL, DB_USERNAME, and DB_PASSWORD variables as required by DatabaseSecurityValidator.
+**Note**: Uses separate JDBC_URL, DATABASE_USERNAME, and DATABASE_PASSWORD variables as required by DatabaseSecurityValidator.
 
 #### JWT Authentication Secret
 ```
@@ -48,13 +48,13 @@ VERCEL_PROJECT_ID=<your-vercel-project-id>
 
 ### GitHub Repository Secrets Required:
 - `JDBC_URL` - PostgreSQL JDBC URL without embedded credentials
-- `DB_USERNAME` - Database username
-- `DB_PASSWORD` - Database password
+- `DATABASE_USERNAME` - Database username
+- `DATABASE_PASSWORD` - Database password
 
 ### Fly.io App Secrets Required:
 - `JDBC_URL` - PostgreSQL JDBC URL without embedded credentials  
-- `DB_USERNAME` - Database username
-- `DB_PASSWORD` - Database password
+- `DATABASE_USERNAME` - Database username
+- `DATABASE_PASSWORD` - Database password
 
 **Note**: These secrets must match between GitHub and Fly.io for deployment to work correctly.
 
@@ -77,8 +77,8 @@ After adding the secrets, the GitHub Actions deployment workflow should succeed.
 
 **Currently Used:**
 - JDBC_URL (PostgreSQL JDBC URL without embedded credentials)
-- DB_USERNAME (database username)
-- DB_PASSWORD (database password)
+- DATABASE_USERNAME (database username)
+- DATABASE_PASSWORD (database password)
 - JWT_SECRET (authentication token signing)
 - FLY_API_TOKEN (backend deployment to Fly.io)
 - VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID (frontend deployment to Vercel)
