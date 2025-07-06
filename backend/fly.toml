@@ -11,8 +11,8 @@ primary_region = 'syd'
   PORT = '8080'
   SPRING_PROFILES_ACTIVE = 'fly'
   JDBC_URL = ''
-  DB_USERNAME = ''
-  DB_PASSWORD = ''
+  DATABASE_USERNAME = ''
+  DATABASE_PASSWORD = ''
   JWT_SECRET = ''
 
 

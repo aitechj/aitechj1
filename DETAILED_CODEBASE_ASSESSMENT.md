@@ -337,8 +337,8 @@ const login = async (credentials: LoginRequest) => {
 # application.yml:9-23
 datasource:
   url: ${JDBC_URL:jdbc:postgresql://localhost:5432/learning_portal}
-  username: ${DB_USERNAME:postgres}
-  password: ${DB_PASSWORD:password}
+  username: ${DATABASE_USERNAME:postgres}
+  password: ${DATABASE_PASSWORD:password}
   driver-class-name: org.postgresql.Driver
 ```
 
